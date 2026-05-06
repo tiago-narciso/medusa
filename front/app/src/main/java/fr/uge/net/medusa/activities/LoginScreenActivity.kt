@@ -30,7 +30,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 @Preview
-fun LoginScreenActivity(modifier: Modifier = Modifier) {
+fun LoginScreenActivity(
+    modifier: Modifier = Modifier,
+    onNavigateToRegister: () -> Unit = {},
+    onAuthenticated: () -> Unit = {}
+) {
     val context = LocalContext.current
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -85,6 +89,7 @@ fun LoginScreenActivity(modifier: Modifier = Modifier) {
                     is LoginResult.Success -> {
                         val token = result.authToken
                         // todo: save token, get user info and navigate to main activity
+                        onAuthenticated();
                     }
                     is LoginResult.Error.InvalidCredentials -> {
                         Toast.makeText(context, translations["invalid_credentials"], Toast.LENGTH_SHORT).show()
@@ -102,9 +107,7 @@ fun LoginScreenActivity(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             text = translations["register_button"]!!,
-            disabled = true
-        ) {
-            // TODO: navigate to register activity
-        }
+            onClick = onNavigateToRegister
+        )
     }
 }

@@ -24,7 +24,7 @@ import fr.uge.net.medusa.ui.fields.StyledTextField
 
 @Composable
 @Preview
-fun RegisterScreenActivity(modifier: Modifier = Modifier) {
+fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () -> Unit = {}) {
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -54,10 +54,9 @@ fun RegisterScreenActivity(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             text = stringResource(R.string.register_button),
-            disabled = true
+            disabled = login.isEmpty() || password.isEmpty()
         ) {
             // TODO: register
         }
-
     }
 }

@@ -5,7 +5,6 @@ class MockGameApi: IGameApi {
         username: String,
         password: String
     ): LoginResult {
-        println("Logging in with username $username and password $password")
         if (username == "network" && password == "network") {
             return LoginResult.Error.NetworkError("Network error")
         }
