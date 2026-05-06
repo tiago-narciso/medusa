@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import fr.uge.net.medusa.activities.LoginScreenActivity
+import androidx.navigation.compose.rememberNavController
+import fr.uge.net.medusa.navigation.MedusaNavHost
 import fr.uge.net.medusa.ui.theme.MedusaTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,9 +17,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             MedusaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginScreenActivity(
+                    MedusaNavHost(
+                        navController = navController,
                         modifier = Modifier
                             .padding(innerPadding)
                     )
