@@ -10,12 +10,14 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.text.KeyboardOptions
 
 private val textFieldShape = RoundedCornerShape(8.dp)
-private val textFieldBackground = Color(0x1F, 0x1F, 0x1F)
-private val textFieldPlaceholder = Color(0x93, 0x93, 0x93)
 
 @Composable
 public fun StyledTextField(
@@ -23,6 +25,7 @@ public fun StyledTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
+    isPassword: Boolean = false,
 ) {
     TextField(
         value = value,
@@ -32,6 +35,10 @@ public fun StyledTextField(
             .heightIn(min = 16.dp),
         placeholder = { Text(placeholder) },
         singleLine = true,
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text
+        ),
         shape = textFieldShape,
         colors = TextFieldDefaults.colors(
             focusedTextColor = Color.White,

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +35,6 @@ fun LoginScreenActivity(modifier: Modifier = Modifier) {
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
-    val maskedPassword by remember { derivedStateOf { "*" .repeat(password.length) } }
     val coroutineScope = rememberCoroutineScope()
     val api = ApiProvider.getApi()
     val translations = mapOf(
@@ -69,9 +67,10 @@ fun LoginScreenActivity(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(24.dp))
         StyledTextField(
-            value = maskedPassword,
+            value = password,
             onValueChange = {v -> password = v},
             placeholder = translations["password_placeholder"]!!,
+            isPassword = true
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(
