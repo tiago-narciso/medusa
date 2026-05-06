@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name" translatable="false">Medusa</string>
+    <string name="username_placeholder">Username</string>
+    <string name="password_placeholder">Password</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="login_screen_title">Welcome</string>
+    <string name="register_screen_title">Register</string>
+    <string name="error_invalid_credentials">Invalid credentials</string>
+    <string name="error_network">A network error occured</string>
+    <string name="error_unknown">An unknown error occured</string>
+</resources>
