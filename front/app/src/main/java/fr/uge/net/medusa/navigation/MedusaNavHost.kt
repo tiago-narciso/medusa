@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import fr.uge.net.medusa.activities.LoginScreenActivity
+import fr.uge.net.medusa.activities.RegisterScreenActivity
 import kotlinx.coroutines.delay
 
 @Composable
@@ -27,7 +29,7 @@ fun MedusaNavHost(
             Text("Loading...")
         }
         composable(Routes.LOGIN) {
-            _root_ide_package_.fr.uge.net.medusa.activities.LoginScreenActivity(
+            LoginScreenActivity(
                 onNavigateToRegister = { navController.navigate(Routes.REGISTER) },
                 onAuthenticated = {
                     navController.navigate(Routes.MAIN_GAME) {
@@ -37,7 +39,7 @@ fun MedusaNavHost(
             )
         }
         composable(Routes.REGISTER) {
-            _root_ide_package_.fr.uge.net.medusa.activities.RegisterScreenActivity(
+            RegisterScreenActivity(
                 onAuthenticated = {
                     navController.navigate(Routes.MAIN_GAME) {
                         popUpTo(Routes.LOGIN) { inclusive = true }

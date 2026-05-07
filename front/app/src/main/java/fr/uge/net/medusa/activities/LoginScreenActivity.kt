@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import fr.uge.net.medusa.R
 import fr.uge.net.medusa.model.api.ApiProvider
 import fr.uge.net.medusa.model.api.LoginResult
+import fr.uge.net.medusa.model.auth.TokenStore
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
 import kotlinx.coroutines.launch
@@ -36,6 +37,7 @@ fun LoginScreenActivity(
     onAuthenticated: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val tokenStore = remember(context) { TokenStore(context.applicationContext) }
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -88,7 +90,7 @@ fun LoginScreenActivity(
                 when (result) {
                     is LoginResult.Success -> {
                         val token = result.authToken
-                        // todo: save token, get user info and navigate to main activity
+                        tokenStore.saveToken(token)
                         onAuthenticated();
                     }
                     is LoginResult.Error.InvalidCredentials -> {
