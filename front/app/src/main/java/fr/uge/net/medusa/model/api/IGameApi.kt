@@ -1,5 +1,20 @@
 package fr.uge.net.medusa.model.api
 
+/**
+ * Defines the game API contract.
+ *
+ * Any class implementing this interface must provide
+ * the login function.
+ *
+ * Examples:
+ * - MockGameApi
+ * - RetrofitGameApi
+ *
+ * The login function is marked as suspend because
+ * login operations are usually asynchronous
+ * (network/database operations).
+ */
+
 interface IGameApi {
     suspend fun login(username: String, password: String): LoginResult // returns the login token
 }

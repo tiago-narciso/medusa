@@ -1,5 +1,18 @@
 package fr.uge.net.medusa.model.api
 
+/**
+ * mock implementation of the game API.
+ *
+ * This class simulates backend behavior locally
+ * without using a real server or internet connection.
+ *
+ * Used for:
+ * - testing UI logic
+ * - testing login flow
+ * - simulating errors
+ * - development without backend
+ *
+ */
 class MockGameApi: IGameApi {
     override suspend fun login(
         username: String,

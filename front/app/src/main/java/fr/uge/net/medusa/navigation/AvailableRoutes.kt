@@ -1,5 +1,12 @@
 package fr.uge.net.medusa.navigation
 
+/**
+ *
+ *  Stores all navigation route names used by the application.
+ *   These route constants are used by the NavHost and NavController
+ *   to identify and navigate between screens.
+ */
+
 public object Routes {
     const val LOADING = "loading"
     const val LOGIN = "login"

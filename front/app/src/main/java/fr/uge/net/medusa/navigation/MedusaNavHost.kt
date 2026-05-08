@@ -9,6 +9,28 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import kotlinx.coroutines.delay
 
+
+/**
+ * Main navigation host of the application.
+ *
+ * Defines:
+ * - all app screens/routes
+ * - navigation flow between screens
+ * - authentication flow
+ * - startup/loading flow
+ *
+ * Navigation structure:
+ *
+ * LOADING
+ *    ↓
+ * LOGIN
+ *    ├── REGISTER
+ *    └── MAIN_GAME
+ *
+ * Uses NavController to navigate between composable screens.
+ */
+
+
 @Composable
 fun MedusaNavHost(
     navController: NavHostController,
@@ -22,7 +44,6 @@ fun MedusaNavHost(
                     popUpTo(Routes.LOADING) { inclusive = true }
                 }
             }
-
             // todo: component with an effect that checks if the token is valid and retrieve user data before redirecting
             Text("Loading...")
         }
