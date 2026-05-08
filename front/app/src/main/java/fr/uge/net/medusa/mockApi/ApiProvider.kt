@@ -1,4 +1,4 @@
-package fr.uge.net.medusa.model.api
+package fr.uge.net.medusa.mockApi
 
 /**
  * Provides a shared API instance for the application.

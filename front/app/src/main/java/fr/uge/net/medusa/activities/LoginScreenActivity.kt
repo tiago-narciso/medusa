@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.net.medusa.R
-import fr.uge.net.medusa.model.api.ApiProvider
-import fr.uge.net.medusa.model.api.LoginResult
+import fr.uge.net.medusa.mockApi.ApiProvider
+import fr.uge.net.medusa.mockApi.LoginResult
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
 import kotlinx.coroutines.launch
