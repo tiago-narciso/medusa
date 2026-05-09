@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const app = express.Router();
 
 /**
  * user/.. endpoint:
@@ -21,7 +21,7 @@ app.post('/login', (req, res) => {
    */
   if(login != 'admin' || password != 'admin'){
     return res.status(401).json({
-      error: 'invalid credentials'
+      error: 'Invalid credentials'
     })
   }
   /**
@@ -50,8 +50,7 @@ app.post('/register', (req, res) => {
     const loginRegex = /^[a-zA-Z0-9]{1,25}$/;
     if(!loginRegex.test(login)){
         return res.status(400).json({
-            error: 'Login must contain only letters and \
-            numbers and be at most 25 characters'
+            error: "Login must contain only letters and numbers and be at most 25 characters"
         })
     }
   
@@ -64,8 +63,7 @@ app.post('/register', (req, res) => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,100}$/;
         if(!passwordRegex.test(password)){
         return res.status(400).json({
-            error: 'Password must contain at least 8 characters,\
-            one uppercase letter and one number'
+            error: "Password must contain at least 8 characters, one uppercase letter and one number"
         })
     }
 
@@ -92,4 +90,4 @@ app.post('/register', (req, res) => {
 });
 
 
-module.exports = router;
+module.exports = app;

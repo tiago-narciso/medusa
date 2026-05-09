@@ -1,8 +1,12 @@
-package fr.uge.net.medusa.model.auth
+package fr.uge.net.medusa.models
 
 import android.content.Context
 import androidx.core.content.edit
 
+/**
+ *
+ * Save authentication tokens locally on the Android device
+ */
 class TokenStore(context: Context) {
     private val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 

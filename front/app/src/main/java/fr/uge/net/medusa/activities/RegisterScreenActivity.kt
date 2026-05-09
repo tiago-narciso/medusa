@@ -22,13 +22,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.net.medusa.R
-import fr.uge.net.medusa.model.api.ApiProvider
-import fr.uge.net.medusa.model.api.LoginResult
-import fr.uge.net.medusa.model.api.RegisterResult
-import fr.uge.net.medusa.model.auth.TokenStore
+import fr.uge.net.medusa.api.ApiClient
+import fr.uge.net.medusa.models.*
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 @Composable
 @Preview
@@ -38,16 +38,17 @@ fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () ->
     var password by remember { mutableStateOf("") }
     val tokenStore = remember(context) { TokenStore(context.applicationContext) }
     var isLoading by remember { mutableStateOf(false) }
-    val api = ApiProvider.getApi()
+    // Initialize API service
+    val apiService = ApiClient.getApiService();
     val coroutineScope = rememberCoroutineScope()
     val translations = mapOf(
         "register_screen_title" to stringResource(R.string.register_screen_title),
         "username_placeholder" to stringResource(R.string.username_placeholder),
         "password_placeholder" to stringResource(R.string.password_placeholder),
         "register_button" to stringResource(R.string.register_button),
-        "login_already_taken" to stringResource(R.string.error_login_already_taken),
-        "invalid_password" to stringResource(R.string.error_invalid_password),
-    )
+        "network_error" to stringResource(R.string.error_network),
+        "unknown_error" to stringResource(R.string.error_unknown),
+        )
     Column(
         modifier = modifier
             .padding(horizontal = 20.dp)
@@ -79,28 +80,39 @@ fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () ->
         ) {
             coroutineScope.launch {
                 isLoading = true;
-                val result = api.register(login, password)
-                when (result) {
-                    is RegisterResult.Success -> {
-                        val token = result.authToken
+                // Register POST request
+                try {
+                    val registerResponse = apiService.register(
+                        RegisterRequest(login, password)
+                    )
+                    // todo: save token, get user info and navigate to main activity
+                    // if token not null execute the block
+                    registerResponse.token?.let { token ->
                         tokenStore.saveToken(token)
-                        onAuthenticated();
+                        onAuthenticated()
                     }
-                    is RegisterResult.Error.LoginAlreadyTaken -> {
-                        Toast.makeText(context, translations["login_already_taken"], Toast.LENGTH_SHORT).show()
-                    }
-                    is RegisterResult.Error.InvalidPassword -> {
-                        Toast.makeText(context, translations["invalid_password"], Toast.LENGTH_SHORT).show()
-                    }
-                    is RegisterResult.Error.NetworkError -> {
-                        Toast.makeText(context, translations["network_error"], Toast.LENGTH_SHORT).show()
-                    }
-                    is RegisterResult.Error.UnknownError -> {
-                        Toast.makeText(context, translations["unknown_error"], Toast.LENGTH_SHORT).show()
-                    }
+                }catch(e: HttpException){
+                    val errorMessage =
+                        ErrorResponse.parseError(
+                            e.response()
+                                ?.errorBody()
+                                ?.string()
+                        )?.error ?:  translations["unknown_error"]
+                    Toast.makeText(
+                        context,
+                        errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }catch (e: IOException){
+                    Toast.makeText(context,
+                        translations["network_error"],
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }finally {
+                    isLoading = false
                 }
-                isLoading = false
             }
         }
+        }
     }
-}
+

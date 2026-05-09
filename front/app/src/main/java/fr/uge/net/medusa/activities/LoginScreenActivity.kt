@@ -22,10 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.net.medusa.R
-import fr.uge.net.medusa.model.api.ApiProvider
-import fr.uge.net.medusa.model.api.LoginResult
-import fr.uge.net.medusa.model.auth.TokenStore
+import fr.uge.net.medusa.models.LoginRequest
+import fr.uge.net.medusa.models.TokenStore
 import fr.uge.net.medusa.api.ApiClient
+import fr.uge.net.medusa.models.ErrorResponse
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
 import kotlinx.coroutines.launch
@@ -48,7 +48,6 @@ fun LoginScreenActivity(
     // Initialize API service
     val apiService = ApiClient.getApiService();
     val translations = mapOf(
-        "invalid_credentials" to stringResource(R.string.error_invalid_credentials),
         "network_error" to stringResource(R.string.error_network),
         "unknown_error" to stringResource(R.string.error_unknown),
         "login_button" to stringResource(R.string.login_button),
@@ -72,14 +71,16 @@ fun LoginScreenActivity(
         Spacer(modifier = Modifier.height(64.dp))
         StyledTextField(
             value = login,
-            onValueChange = {v -> login = v},
+            onValueChange = { v -> login = v },
             placeholder = translations["username_placeholder"]!!,
         )
-        Spacer(modifier
-        = Modifier.height(24.dp))
+        Spacer(
+            modifier
+            = Modifier.height(24.dp)
+        )
         StyledTextField(
             value = password,
-            onValueChange = {v -> password = v},
+            onValueChange = { v -> password = v },
             placeholder = translations["password_placeholder"]!!,
             isPassword = true
         )
@@ -91,36 +92,37 @@ fun LoginScreenActivity(
         ) {
             coroutineScope.launch {
                 isLoading = true;
-                // Login GET request
+                // Login POST request
                 try {
                     val loginResponse = apiService.login(
                         LoginRequest(login, password)
                     )
-                    val token = loginResponse.token
                     // todo: save token, get user info and navigate to main activity
-                    tokenStore.saveToken(token)
-                    onAuthenticated()
-                }catch(e: HttpException){
-                    when(e.code()){
-                        401 -> {
-                            Toast.makeText(context,
-                                translations["invalid_credentials"],
-                                Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                        else -> {
-                            Toast.makeText(context,
-                                translations["unknown_error"],
-                                Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                    // if token not null execute the block
+                    loginResponse.token?.let { token ->
+                        tokenStore.saveToken(token)
+                        onAuthenticated()
                     }
-                }catch (e: IOException){
-                    Toast.makeText(context,
-                        translations["Network_error"],
-                        Toast.LENGTH_SHORT)
+                } catch (e: HttpException) {
+                    val errorMessage =
+                        ErrorResponse.parseError(
+                            e.response()
+                                ?.errorBody()
+                                ?.string()
+                        )?.error ?: translations["unknown_error"]
+                    Toast.makeText(
+                        context,
+                        errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } catch (e: IOException) {
+                    Toast.makeText(
+                        context,
+                        translations["network_error"],
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
-                }finally {
+                } finally {
                     isLoading = false
                 }
             }
