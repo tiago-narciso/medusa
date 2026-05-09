@@ -51,7 +51,6 @@ fun LoginScreenActivity(
         "network_error" to stringResource(R.string.error_network),
         "unknown_error" to stringResource(R.string.error_unknown),
         "login_button" to stringResource(R.string.login_button),
-        "missing_required_fields" to stringResource (R.string.missing_required_fields),
         "register_button" to stringResource(R.string.register_button),
         "login_screen_title" to stringResource(R.string.login_screen_title),
         "username_placeholder" to stringResource(R.string.username_placeholder),
@@ -101,13 +100,6 @@ fun LoginScreenActivity(
                     onAuthenticated()
                 }catch(e: HttpException){
                     when(e.code()){
-                        // not necessary since u cant click on login when one field is empty
-                        400 -> {
-                            Toast.makeText(context,
-                                translations["missing_required_fields"],
-                                Toast.LENGTH_SHORT)
-                                .show()
-                        }
                         401 -> {
                             Toast.makeText(context,
                                 translations["invalid_credentials"],
