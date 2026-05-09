@@ -7,7 +7,8 @@
     <string name="login_screen_title">Welcome</string>
     <string name="register_screen_title">Register</string>
     <string name="error_invalid_credentials">Invalid credentials</string>
-    <string name="error_network">A network error occurred</string>
-    <string name="error_unknown">An unknown error occurred</string>
-    <string name="missing_required_fields">Missing login or password</string>
+    <string name="error_network">A network error occured</string>
+    <string name="error_unknown">An unknown error occured</string>
+    <string name="error_login_already_taken">The login you chose is already taken</string>
+    <string name="error_invalid_password">The password you chose is too weak to be used</string>
 </resources>

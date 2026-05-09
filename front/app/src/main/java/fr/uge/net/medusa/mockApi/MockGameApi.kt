@@ -27,4 +27,17 @@ class MockGameApi: IGameApi {
         }
         return LoginResult.Success("token")
     }
+
+    override suspend fun register(
+        username: String,
+        password: String
+    ): RegisterResult {
+        if (username == "taken" && password == "taken") {
+            return RegisterResult.Error.LoginAlreadyTaken
+        }
+        if (password.length < 2) {
+            return RegisterResult.Error.InvalidPassword
+        }
+        return RegisterResult.Success("token")
+    }
 }

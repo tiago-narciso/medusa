@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import fr.uge.net.medusa.activities.LoginScreenActivity
+import fr.uge.net.medusa.activities.RegisterScreenActivity
 import kotlinx.coroutines.delay
 import fr.uge.net.medusa.activities.LoginScreenActivity
 import fr.uge.net.medusa.activities.RegisterScreenActivity
