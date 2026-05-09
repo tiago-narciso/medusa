@@ -8,7 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import kotlinx.coroutines.delay
-
+import fr.uge.net.medusa.activities.LoginScreenActivity
+import fr.uge.net.medusa.activities.RegisterScreenActivity
 
 /**
  * Main navigation host of the application.
@@ -20,7 +21,6 @@ import kotlinx.coroutines.delay
  * - startup/loading flow
  *
  * Navigation structure:
- *
  * LOADING
  *    ↓
  * LOGIN
@@ -41,14 +41,14 @@ fun MedusaNavHost(
             LaunchedEffect(Unit) {
                 delay(1000)
                 navController.navigate(Routes.LOGIN) {
-                    popUpTo(Routes.LOADING) { inclusive = true }
+                    popUpTo(Routes.LOADING) { inclusive = true } // remove loading screen from back stack
                 }
             }
             // todo: component with an effect that checks if the token is valid and retrieve user data before redirecting
             Text("Loading...")
         }
         composable(Routes.LOGIN) {
-            _root_ide_package_.fr.uge.net.medusa.activities.LoginScreenActivity(
+            LoginScreenActivity(
                 onNavigateToRegister = { navController.navigate(Routes.REGISTER) },
                 onAuthenticated = {
                     navController.navigate(Routes.MAIN_GAME) {
@@ -58,7 +58,7 @@ fun MedusaNavHost(
             )
         }
         composable(Routes.REGISTER) {
-            _root_ide_package_.fr.uge.net.medusa.activities.RegisterScreenActivity(
+            RegisterScreenActivity(
                 onAuthenticated = {
                     navController.navigate(Routes.MAIN_GAME) {
                         popUpTo(Routes.LOGIN) { inclusive = true }

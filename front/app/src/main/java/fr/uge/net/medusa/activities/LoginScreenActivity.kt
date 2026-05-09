@@ -22,11 +22,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.net.medusa.R
+import fr.uge.net.medusa.api.ApiClient
 import fr.uge.net.medusa.mockApi.ApiProvider
 import fr.uge.net.medusa.mockApi.LoginResult
+import fr.uge.net.medusa.models.LoginRequest
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
 import kotlinx.coroutines.launch
+import java.io.IOException
+import retrofit2.HttpException
 
 @Composable
 @Preview
@@ -40,12 +44,14 @@ fun LoginScreenActivity(
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val api = ApiProvider.getApi()
+    // Initialize API service
+    val apiService = ApiClient.getApiService();
     val translations = mapOf(
         "invalid_credentials" to stringResource(R.string.error_invalid_credentials),
         "network_error" to stringResource(R.string.error_network),
         "unknown_error" to stringResource(R.string.error_unknown),
         "login_button" to stringResource(R.string.login_button),
+        "missing_required_fields" to stringResource (R.string.missing_required_fields),
         "register_button" to stringResource(R.string.register_button),
         "login_screen_title" to stringResource(R.string.login_screen_title),
         "username_placeholder" to stringResource(R.string.username_placeholder),
@@ -69,7 +75,8 @@ fun LoginScreenActivity(
             onValueChange = {v -> login = v},
             placeholder = translations["username_placeholder"]!!,
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier
+        = Modifier.height(24.dp))
         StyledTextField(
             value = password,
             onValueChange = {v -> password = v},
@@ -84,24 +91,44 @@ fun LoginScreenActivity(
         ) {
             coroutineScope.launch {
                 isLoading = true;
-                val result = api.login(login, password)
-                when (result) {
-                    is LoginResult.Success -> {
-                        val token = result.authToken
-                        // todo: save token, get user info and navigate to main activity
-                        onAuthenticated();
+                // Login GET request
+                try {
+                    val loginResponse = apiService.login(
+                        LoginRequest(login, password)
+                    )
+                    val token = loginResponse.token
+                    // todo: save token, get user info and navigate to main activity
+                    onAuthenticated()
+                }catch(e: HttpException){
+                    when(e.code()){
+                        // not necessary since u cant click on login when one field is empty
+                        400 -> {
+                            Toast.makeText(context,
+                                translations["missing_required_fields"],
+                                Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        401 -> {
+                            Toast.makeText(context,
+                                translations["invalid_credentials"],
+                                Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        else -> {
+                            Toast.makeText(context,
+                                translations["unknown_error"],
+                                Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     }
-                    is LoginResult.Error.InvalidCredentials -> {
-                        Toast.makeText(context, translations["invalid_credentials"], Toast.LENGTH_SHORT).show()
-                    }
-                    is LoginResult.Error.NetworkError -> {
-                        Toast.makeText(context, translations["network_error"], Toast.LENGTH_SHORT).show()
-                    }
-                    is LoginResult.Error.UnknownError -> {
-                        Toast.makeText(context, translations["unknown_error"], Toast.LENGTH_SHORT).show()
-                    }
+                }catch (e: IOException){
+                    Toast.makeText(context,
+                        translations["Network_error"],
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }finally {
+                    isLoading = false
                 }
-                isLoading = false
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
@@ -111,3 +138,4 @@ fun LoginScreenActivity(
         )
     }
 }
+

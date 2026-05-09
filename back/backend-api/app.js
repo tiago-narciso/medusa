@@ -30,16 +30,15 @@ app.post('/user/login', (req, res) => {
     });
   }
   
-  const newUser = {
-    id: Date.now(),
-    login,
-    email,
-    createdAt: new Date().toISOString()
-  };
-  
-  res.status(201).json({
-    message: 'User created successfully',
-    data: newUser
+  //Fake authentication: todo: to be replaced by auth using the DB
+  if(login != 'admin' || password != 'admin'){
+    return res.status(401).json({
+      error: 'invalid credentials'
+    })
+  }
+  // success response
+  res.status(200).json({
+    token: 'fake-token' // todo: to be replaced by real token
   });
 });
 
