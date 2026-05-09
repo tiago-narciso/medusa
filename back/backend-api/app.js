@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
 const app = express();
+
+// register route groups
+const usersRouter = require('./routes/user');
 
 // Middleware configuration, runs before the request reaches our route
 app.use(bodyParser.json()); //If client sends json automatically parse it
@@ -12,43 +14,28 @@ app.use(cors());
 // Environment configuration
 const PORT =  3000;
 
-// API Routes 
 /*
-All routes are checked in order from top to down
-If a route throws an error iut is handled by the error middleware 
-in the end
+API Routes
+- Routes are checked from top to bottom in the order
+they are declared.
+- If a route throws an unhandled error, it is passed
+to the error handling middleware defined later in
+the file.
 */
 
-// LOGIN POST endpoint
-app.post('/user/login', (req, res) => {
-  const { login, password } = req.body;
-  
-  if (!login || !password) {
-    return res.status(400).json({
-      error: 'Missing required fields',
-      required: ['login', 'password']
-    });
-  }
-  
-  //Fake authentication: todo: to be replaced by auth using the DB
-  if(login != 'admin' || password != 'admin'){
-    return res.status(401).json({
-      error: 'invalid credentials'
-    })
-  }
-  // success response
-  res.status(200).json({
-    token: 'fake-token' // todo: to be replaced by real token
-  });
-});
+// Use the routers
+app.use('/user', usersRouter);
 
-// Health check endpoint used to check the server is running,
-//  the app is responsive, the backend is alive
+/**
+ * Health check endpoint used to check the server is running,
+  the app is responsive, the backend is alive
+ * 
+*/ 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime() });
 });
 
-// Error handling middleware, all errors go to one place
+// Error handling middleware, all unhandled routing get handled here
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
