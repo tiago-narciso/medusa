@@ -99,10 +99,9 @@ fun LoginScreenActivity(
                     )
                     // todo: save token, get user info and navigate to main activity
                     // if token not null execute the block
-                    loginResponse.token?.let { token ->
-                        tokenStore.saveToken(token)
-                        onAuthenticated()
-                    }
+                    val token = loginResponse.token
+                    tokenStore.saveToken(token)
+                    onAuthenticated()
                 } catch (e: HttpException) {
                     val errorMessage =
                         ErrorResponse.parseError(

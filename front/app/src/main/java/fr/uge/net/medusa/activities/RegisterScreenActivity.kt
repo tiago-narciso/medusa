@@ -87,10 +87,9 @@ fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () ->
                     )
                     // todo: save token, get user info and navigate to main activity
                     // if token not null execute the block
-                    registerResponse.token?.let { token ->
-                        tokenStore.saveToken(token)
-                        onAuthenticated()
-                    }
+                    val token = registerResponse.token
+                    tokenStore.saveToken(token)
+                    onAuthenticated()
                 }catch(e: HttpException){
                     val errorMessage =
                         ErrorResponse.parseError(
