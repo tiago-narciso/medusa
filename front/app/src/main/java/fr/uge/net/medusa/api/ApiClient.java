@@ -21,10 +21,12 @@ import java.util.concurrent.TimeUnit;
  * Retrofit and OkHttp are created only once and reused
  * throughout the application for better performance.
  */
-public class ApiClient {
+public final class ApiClient {
     // Use 10.0.2.2 for Android emulator, or your machine's IP for physical device
     private static final String BASE_URL = "http://10.0.2.2:3000/";
     private static Retrofit retrofit;
+
+    private ApiClient(){}
 
     public static Retrofit getClient() {
         if (retrofit == null) {
