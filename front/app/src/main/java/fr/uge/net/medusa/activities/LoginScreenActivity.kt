@@ -22,12 +22,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.net.medusa.R
-import fr.uge.net.medusa.model.api.ApiProvider
-import fr.uge.net.medusa.model.api.LoginResult
-import fr.uge.net.medusa.model.auth.TokenStore
+import fr.uge.net.medusa.models.LoginRequest
+import fr.uge.net.medusa.models.TokenStore
+import fr.uge.net.medusa.api.ApiClient
+import fr.uge.net.medusa.api.ApiProvider
+import fr.uge.net.medusa.models.ErrorResponse
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
+import fr.uge.net.medusa.utils.ErrorHandler
 import kotlinx.coroutines.launch
+import java.io.IOException
+import retrofit2.HttpException
 
 @Composable
 @Preview
@@ -42,9 +47,9 @@ fun LoginScreenActivity(
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val api = ApiProvider.getApi()
+    // Initialize API service
+    val apiService = ApiProvider.getRealApi();
     val translations = mapOf(
-        "invalid_credentials" to stringResource(R.string.error_invalid_credentials),
         "network_error" to stringResource(R.string.error_network),
         "unknown_error" to stringResource(R.string.error_unknown),
         "login_button" to stringResource(R.string.login_button),
@@ -68,13 +73,16 @@ fun LoginScreenActivity(
         Spacer(modifier = Modifier.height(64.dp))
         StyledTextField(
             value = login,
-            onValueChange = {v -> login = v},
+            onValueChange = { v -> login = v },
             placeholder = translations["username_placeholder"]!!,
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(
+            modifier
+            = Modifier.height(24.dp)
+        )
         StyledTextField(
             value = password,
-            onValueChange = {v -> password = v},
+            onValueChange = { v -> password = v },
             placeholder = translations["password_placeholder"]!!,
             isPassword = true
         )
@@ -86,24 +94,24 @@ fun LoginScreenActivity(
         ) {
             coroutineScope.launch {
                 isLoading = true;
-                val result = api.login(login, password)
-                when (result) {
-                    is LoginResult.Success -> {
-                        val token = result.authToken
-                        tokenStore.saveToken(token)
-                        onAuthenticated();
-                    }
-                    is LoginResult.Error.InvalidCredentials -> {
-                        Toast.makeText(context, translations["invalid_credentials"], Toast.LENGTH_SHORT).show()
-                    }
-                    is LoginResult.Error.NetworkError -> {
-                        Toast.makeText(context, translations["network_error"], Toast.LENGTH_SHORT).show()
-                    }
-                    is LoginResult.Error.UnknownError -> {
-                        Toast.makeText(context, translations["unknown_error"], Toast.LENGTH_SHORT).show()
-                    }
+                // Login POST request
+                try {
+                    val loginResponse = apiService.login(
+                        LoginRequest(login, password)
+                    )
+                    // todo: save token, get user info and navigate to main activity
+                    // if token not null execute the block
+                    val token = loginResponse.token
+                    tokenStore.saveToken(token)
+                    onAuthenticated()
+                } catch (e: Exception) {
+                    ErrorHandler.handleException(context, e,
+                        translations["unknown_error"],
+                        translations["network_error"])
+
+                } finally {
+                    isLoading = false
                 }
-                isLoading = false
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
@@ -113,3 +121,4 @@ fun LoginScreenActivity(
         )
     }
 }
+
