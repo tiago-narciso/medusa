@@ -26,6 +26,7 @@ import fr.uge.net.medusa.api.ApiClient
 import fr.uge.net.medusa.models.*
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
+import fr.uge.net.medusa.utils.ErrorHandler
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -90,23 +91,10 @@ fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () ->
                     val token = registerResponse.token
                     tokenStore.saveToken(token)
                     onAuthenticated()
-                }catch(e: HttpException){
-                    val errorMessage =
-                        ErrorResponse.parseError(
-                            e.response()
-                                ?.errorBody()
-                                ?.string()
-                        )?.error ?:  translations["unknown_error"]
-                    Toast.makeText(
-                        context,
-                        errorMessage,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }catch (e: IOException){
-                    Toast.makeText(context,
-                        translations["network_error"],
-                        Toast.LENGTH_SHORT)
-                        .show()
+                }catch(e:Exception){
+                    ErrorHandler.handleException(context, e,
+                        translations["unknown_error"],
+                        translations["network_error"])
                 }finally {
                     isLoading = false
                 }
