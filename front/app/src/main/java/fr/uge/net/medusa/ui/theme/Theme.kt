@@ -17,10 +17,10 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Pink80,
     background = Black,
     surface = SurfaceDark,
-    surfaceVariant = SurfaceMuted,
     onBackground = Color.White,
-    onSurface = Color.White,
     onSecondary = Grey,
+    onSurface = OnSurfaceGrey,
+    onSurfaceVariant = OnSurfaceSelected
 )
 
 private val LightColorScheme = lightColorScheme(

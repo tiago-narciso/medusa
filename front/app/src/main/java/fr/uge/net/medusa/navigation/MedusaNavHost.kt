@@ -6,7 +6,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -18,8 +17,6 @@ import fr.uge.net.medusa.activities.RankingActivity
 import fr.uge.net.medusa.activities.RegisterScreenActivity
 import fr.uge.net.medusa.activities.SettingsActivity
 import kotlinx.coroutines.delay
-import fr.uge.net.medusa.activities.LoginScreenActivity
-import fr.uge.net.medusa.activities.RegisterScreenActivity
 
 /**
  * Main navigation host of the application.
@@ -47,7 +44,7 @@ fun MedusaNavHost(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues
 ) {
-    NavHost(navController = navController, startDestination = Routes.LOADING) {
+    NavHost(navController = navController, startDestination = Routes.MAIN_GAME) {
         composable(Routes.LOADING) {
             LaunchedEffect(Unit) {
                 delay(1000)

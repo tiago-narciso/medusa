@@ -54,7 +54,6 @@ public fun BottomNavigationBar(
         modifier = modifier
             .fillMaxWidth()
             .height(84.dp + innerPadding.calculateBottomPadding()),
-        color = Color(0xFF191919)
     ) {
         Row(
             modifier = Modifier
@@ -81,7 +80,7 @@ public fun BottomNavigationBar(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
                             .fillMaxWidth(0.7f)
-                            .background(if (selected) Color(0xFF3B3B3B) else Color.Transparent),
+                            .background(if (selected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f) else Color.Transparent),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -90,12 +89,12 @@ public fun BottomNavigationBar(
                                 .size(27.dp)
                                 .padding(vertical = 5.dp),
                             contentDescription = "${tab.label} logo",
-                            tint = if (selected) Color(0xFFE5E5E5) else Color(0xFF939393)
+                            tint = if (selected) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Text(
                         text = tab.label,
-                        color = if (selected) Color(0xFFE5E5E5) else Color(0xFF939393),
+                        color = if (selected) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold
                     )
