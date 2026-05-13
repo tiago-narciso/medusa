@@ -1,5 +1,3 @@
-# Use postgres/example user/password credentials
-
 services:
   db:
     image: postgis/postgis
@@ -13,8 +11,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgresql:/var/lib/postgresql
-      - ./init-scripts:/docker-entrypoint-initdb.d/
+      - ./back/postgresql:/var/lib/postgresql/data
+      - ./back/init-scripts:/docker-entrypoint-initdb.d/
 
   adminer:
     image: adminer
