@@ -31,15 +31,29 @@ import fr.uge.net.medusa.utils.ErrorHandler
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+
+class RegisterViewModel : ViewModel() {
+    var login by  mutableStateOf("")
+    var password by  mutableStateOf("")
+    var isLoading by mutableStateOf(false)
+}
+
+
 
 @Composable
 @Preview
-fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () -> Unit = {}) {
+fun RegisterScreenActivity(modifier: Modifier = Modifier,
+                           onAuthenticated: () -> Unit = {},
+                           viewModel: LoginViewModel = viewModel()
+) {
     val context = LocalContext.current
-    var login by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    //var login by remember { mutableStateOf("") }
+    //var password by remember { mutableStateOf("") }
     val tokenStore = remember(context) { TokenStore(context.applicationContext) }
-    var isLoading by remember { mutableStateOf(false) }
+    //var isLoading by remember { mutableStateOf(false) }
     // Initialize API service
     val apiService = ApiProvider.getRealApi();
     val coroutineScope = rememberCoroutineScope()
@@ -64,28 +78,28 @@ fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () ->
         )
         Spacer(modifier = Modifier.height(64.dp))
         StyledTextField(
-            value = login,
-            onValueChange = {v -> login = v},
+            value = viewModel.login,
+            onValueChange = {v -> viewModel.login = v},
             placeholder = translations["username_placeholder"]!!,
         )
         Spacer(modifier = Modifier.height(24.dp))
         StyledTextField(
-            value = password,
-            onValueChange = {v -> password = v},
+            value = viewModel.password,
+            onValueChange = {v -> viewModel.password = v},
             placeholder = translations["password_placeholder"]!!,
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             text = translations["register_button"]!!,
-            disabled = login.isEmpty() || password.isEmpty(),
-            isLoading = isLoading
+            disabled = viewModel.login.isEmpty() || viewModel.password.isEmpty(),
+            isLoading = viewModel.isLoading
         ) {
             coroutineScope.launch {
-                isLoading = true;
+                viewModel.isLoading = true;
                 // Register POST request
                 try {
                     val registerResponse = apiService.register(
-                        RegisterRequest(login, password)
+                        RegisterRequest(viewModel.login, viewModel.password)
                     )
                     // todo: save token, get user info and navigate to main activity
                     // if token not null execute the block
@@ -97,7 +111,7 @@ fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () ->
                         translations["unknown_error"],
                         translations["network_error"])
                 }finally {
-                    isLoading = false
+                    viewModel.isLoading = false
                 }
             }
         }

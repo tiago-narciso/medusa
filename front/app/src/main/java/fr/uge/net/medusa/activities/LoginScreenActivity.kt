@@ -11,6 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -21,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.uge.net.medusa.R
 import fr.uge.net.medusa.models.LoginRequest
 import fr.uge.net.medusa.models.TokenStore
@@ -33,19 +36,30 @@ import fr.uge.net.medusa.utils.ErrorHandler
 import kotlinx.coroutines.launch
 import java.io.IOException
 import retrofit2.HttpException
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+
+class LoginViewModel : ViewModel() {
+    var login by  mutableStateOf("")
+    var password by  mutableStateOf("")
+    var isLoading by mutableStateOf(false)
+}
 
 @Composable
 @Preview
 fun LoginScreenActivity(
     modifier: Modifier = Modifier,
     onNavigateToRegister: () -> Unit = {},
-    onAuthenticated: () -> Unit = {}
+    onAuthenticated: () -> Unit = {},
+    viewModel: LoginViewModel = viewModel()
+
 ) {
     val context = LocalContext.current
     val tokenStore = remember(context) { TokenStore(context.applicationContext) }
-    var login by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+    //var login by remember { mutableStateOf("") }
+    //var password by remember { mutableStateOf("") }
+    //var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     // Initialize API service
     val apiService = ApiProvider.getRealApi();
@@ -72,8 +86,8 @@ fun LoginScreenActivity(
         )
         Spacer(modifier = Modifier.height(64.dp))
         StyledTextField(
-            value = login,
-            onValueChange = { v -> login = v },
+            value = viewModel.login,
+            onValueChange = { v -> viewModel.login = v },
             placeholder = translations["username_placeholder"]!!,
         )
         Spacer(
@@ -81,23 +95,23 @@ fun LoginScreenActivity(
             = Modifier.height(24.dp)
         )
         StyledTextField(
-            value = password,
-            onValueChange = { v -> password = v },
+            value = viewModel.password,
+            onValueChange = { v -> viewModel.password = v },
             placeholder = translations["password_placeholder"]!!,
             isPassword = true
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             text = translations["login_button"]!!,
-            disabled = login.isEmpty() || password.isEmpty(),
-            isLoading = isLoading
+            disabled = viewModel.login.isEmpty() || viewModel.password.isEmpty(),
+            isLoading = viewModel.isLoading
         ) {
             coroutineScope.launch {
-                isLoading = true;
+                viewModel.isLoading = true;
                 // Login POST request
                 try {
                     val loginResponse = apiService.login(
-                        LoginRequest(login, password)
+                        LoginRequest(viewModel.login, viewModel.password)
                     )
                     // todo: save token, get user info and navigate to main activity
                     // if token not null execute the block
@@ -110,7 +124,7 @@ fun LoginScreenActivity(
                         translations["network_error"])
 
                 } finally {
-                    isLoading = false
+                    viewModel.isLoading = false
                 }
             }
         }
