@@ -1,5 +1,9 @@
 package fr.uge.net.medusa.mockApi
 
+import fr.uge.net.medusa.api.IGameApi
+
+import fr.uge.net.medusa.models.*
+
 /**
  * mock implementation of the game API.
  *
@@ -15,29 +19,28 @@ package fr.uge.net.medusa.mockApi
  */
 class MockGameApi: IGameApi {
     override suspend fun login(
-        username: String,
-        password: String
-    ): LoginResult {
-        if (username == "network" && password == "network") {
-            return LoginResult.Error.NetworkError("Network error")
+        request: LoginRequest
+    ): LoginResponse {
+        if (request.login == "network" && request.password == "network") {
+            throw Exception("network error")
         }
 
-        if (username != "admin" || password != "admin") {
-            return LoginResult.Error.InvalidCredentials
+        if (request.login != "admin" || request.password!= "admin") {
+            throw Exception("invalid credentials")
         }
-        return LoginResult.Success("token")
+        return LoginResponse(token = "token")
     }
 
     override suspend fun register(
-        username: String,
-        password: String
-    ): RegisterResult {
-        if (username == "taken" && password == "taken") {
-            return RegisterResult.Error.LoginAlreadyTaken
+        request: RegisterRequest
+
+    ): RegisterResponse {
+        if (request.login == "taken" && request.password == "taken") {
+            throw Exception(" Login already taken")
         }
-        if (password.length < 2) {
-            return RegisterResult.Error.InvalidPassword
+        if (request.password.length < 2) {
+            throw Exception(" Invalid response")
         }
-        return RegisterResult.Success("token")
+        return RegisterResponse(token = "token")
     }
 }

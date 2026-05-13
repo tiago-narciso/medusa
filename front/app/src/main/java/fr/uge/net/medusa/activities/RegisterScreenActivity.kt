@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.uge.net.medusa.R
 import fr.uge.net.medusa.api.ApiClient
+import fr.uge.net.medusa.api.ApiProvider
 import fr.uge.net.medusa.models.*
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
@@ -40,7 +41,7 @@ fun RegisterScreenActivity(modifier: Modifier = Modifier, onAuthenticated: () ->
     val tokenStore = remember(context) { TokenStore(context.applicationContext) }
     var isLoading by remember { mutableStateOf(false) }
     // Initialize API service
-    val apiService = ApiClient.getApiService();
+    val apiService = ApiProvider.getRealApi();
     val coroutineScope = rememberCoroutineScope()
     val translations = mapOf(
         "register_screen_title" to stringResource(R.string.register_screen_title),

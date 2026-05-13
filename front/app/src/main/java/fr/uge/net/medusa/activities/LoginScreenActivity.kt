@@ -25,6 +25,7 @@ import fr.uge.net.medusa.R
 import fr.uge.net.medusa.models.LoginRequest
 import fr.uge.net.medusa.models.TokenStore
 import fr.uge.net.medusa.api.ApiClient
+import fr.uge.net.medusa.api.ApiProvider
 import fr.uge.net.medusa.models.ErrorResponse
 import fr.uge.net.medusa.ui.fields.Button
 import fr.uge.net.medusa.ui.fields.StyledTextField
@@ -47,7 +48,7 @@ fun LoginScreenActivity(
     var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     // Initialize API service
-    val apiService = ApiClient.getApiService();
+    val apiService = ApiProvider.getRealApi();
     val translations = mapOf(
         "network_error" to stringResource(R.string.error_network),
         "unknown_error" to stringResource(R.string.error_unknown),
