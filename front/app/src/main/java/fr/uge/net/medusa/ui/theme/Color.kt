@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 val Grey = Color(0xFF939393)
 val DarkGrey = Color(0xFF1F1F1F)
+val SurfaceDark = Color(0xFF171717)
+val SurfaceMuted = Color(0xFF252525)
 val Pink80 = Color(0xFFEFB8C8)
 
 val Purple40 = Color(0xFF6650a4)

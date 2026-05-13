@@ -16,7 +16,10 @@ private val DarkColorScheme = darkColorScheme(
     secondary = DarkGrey,
     tertiary = Pink80,
     background = Black,
+    surface = SurfaceDark,
+    surfaceVariant = SurfaceMuted,
     onBackground = Color.White,
+    onSurface = Color.White,
     onSecondary = Grey,
 )
 

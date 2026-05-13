@@ -22,8 +22,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MedusaNavHost(
                         navController = navController,
-                        modifier = Modifier
-                            .padding(innerPadding)
+                        innerPadding = innerPadding
                     )
                 }
             }
