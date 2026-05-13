@@ -12,7 +12,11 @@ app.use(bodyParser.urlencoded({ extended: true })); // parses html form data
 app.use(cors());
 
 // Environment configuration
-const PORT =  3000;
+const PORT = 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 /*
 API Routes
