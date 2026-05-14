@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,6 +43,9 @@ class MotionControllerViewModel : ViewModel() {
 // Move the balls
 // =====================================================
 
+/**
+ * Move the balls in a falling motion
+ */
 fun moveBalls(
     fallingBalls: List<FallingBall>,
     screenHeight: Float,
@@ -66,8 +70,13 @@ fun moveBalls(
 }
 
 
+/**
+ * Draw the balls and crosshair using canvas
+ */
 @Composable
-fun DrawBallsCrosshair(fallingBalls: List<FallingBall>){
+fun DrawBallsCrosshair(fallingBalls: List<FallingBall>,
+                       cameraOffsetX:Float,
+                       cameraOffsetY:Float, ){
     Canvas(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -77,8 +86,8 @@ fun DrawBallsCrosshair(fallingBalls: List<FallingBall>){
                 color = ball.color,
                 radius = ball.radius,
                 center = Offset(
-                    ball.x,
-                    ball.y
+                    ball.x + cameraOffsetX,
+                    ball.y + cameraOffsetY
                 )
             )
         }
@@ -109,7 +118,9 @@ fun DrawBallsCrosshair(fallingBalls: List<FallingBall>){
 }
 
 
-
+/**
+ * Main game logic
+ */
 @Composable
 @Preview
 fun MotionControlledShooting(
@@ -117,8 +128,11 @@ fun MotionControlledShooting(
 
     ) {
     var fallingBalls by remember {
-        mutableStateOf<List<FallingBall>>(emptyList())
-    }
+        mutableStateOf<List<FallingBall>>(emptyList()) }
+    var cameraOffsetX by remember { mutableFloatStateOf(0f) }
+    var cameraOffsetY by remember { mutableFloatStateOf(0f) }
+
+
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
@@ -143,7 +157,7 @@ fun MotionControlledShooting(
             }
         }
         // draw the balls and the crosshair
-        DrawBallsCrosshair(fallingBalls)
+        DrawBallsCrosshair(fallingBalls,cameraOffsetX, cameraOffsetY )
     }
 
 
