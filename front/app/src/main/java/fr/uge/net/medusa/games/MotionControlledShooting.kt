@@ -2,94 +2,119 @@ package fr.uge.net.medusa.games
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.widget.Toast
+import android.graphics.Canvas
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import fr.uge.net.medusa.R
-import fr.uge.net.medusa.models.LoginRequest
-import fr.uge.net.medusa.models.TokenStore
-import fr.uge.net.medusa.api.ApiClient
-import fr.uge.net.medusa.api.ApiProvider
-import fr.uge.net.medusa.models.ErrorResponse
-import fr.uge.net.medusa.ui.fields.Button
-import fr.uge.net.medusa.ui.fields.StyledTextField
-import fr.uge.net.medusa.utils.ErrorHandler
-import kotlinx.coroutines.launch
-import java.io.IOException
-import retrofit2.HttpException
+import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
+import kotlin.collections.plus
+import kotlin.random.Random
 
 
-class LoginViewModel : ViewModel() {
+class MotionControllerViewModel : ViewModel() {
 
 }
+
+
+// =====================================================
+// Move the balls
+// =====================================================
+
+fun moveBalls(
+    fallingBalls: List<FallingBall>,
+    screenHeight: Float,
+    screenWidth: Float
+): List<FallingBall> {
+
+    return fallingBalls.map { ball ->
+        // y increases -> ball is falling
+        val newY = ball.y + ball.speed
+        // if ball left screen
+        if (newY > 1000f) {
+            // put ball above the screen so it falls again
+            ball.copy(
+                y = Random.nextFloat() * -1000f,
+                x = Random.nextFloat() * screenWidth // random so each ball falls in a different pos
+            )
+        } else {
+            // continue falling
+            ball.copy(y = newY)
+        }
+    }
+}
+
 
 @Composable
 @Preview
 fun MotionControlledShooting(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = viewModel()
 
-) {
-    val context = LocalContext.current
-
-
-
-
-    fun loadImageFromAssets(context: Context, path: String): ImageBitmap? {
-        val assetManager = context.assets
-        val istr = assetManager.open(path)
-        val bitmap = BitmapFactory.decodeStream(istr)
-        istr.close()
-        return bitmap.asImageBitmap()
+    ) {
+    var fallingBalls by remember {
+        mutableStateOf<List<FallingBall>>(emptyList())
     }
-
-    @Composable
-    fun getAssetImage(path: String): ImageBitmap? {
-        val context = LocalContext.current
-        var bitmap by remember { mutableStateOf<ImageBitmap?>(null) } // we keep this bitmap in cache
-        LaunchedEffect(path) {
-            bitmap = loadImageFromAssets(context, path)
+    BoxWithConstraints(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White),
+    ) {
+        val maxWidth = this.maxWidth.value
+        val maxHeight = this.maxHeight.value
+        
+        // create initial balls,
+        // this couroutine is run once
+        LaunchedEffect(Unit) {
+            repeat(3) {
+                val ball = FallingBall.createBall(maxHeight, maxWidth)
+                fallingBalls = fallingBalls + ball
+            }
         }
-        return bitmap
-    }
-
-    @Composable
-    fun FishDisplayer(fish: Shooters, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
-        Box(modifier) {
-            val path = "fishes/" + fish.filename
-            getAssetImage(path)?.let { Image(it, "") }
-            // in case it's null ?. only calls when result is non nullable
-
+        // game loop: balls fall down
+        LaunchedEffect(Unit) {
+            while (true) {
+                fallingBalls = moveBalls(fallingBalls, maxHeight, maxWidth)
+                delay(16)
+            }
+        }
+        Canvas(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // display the shooters
+            fallingBalls.forEach { ball ->
+                drawCircle(
+                    color = ball.color,
+                    radius = ball.radius,
+                    center = Offset(
+                        ball.x,
+                        ball.y
+                    )
+                )
+            }
         }
     }
 
 }
+
+
+
 
