@@ -20,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,6 +67,50 @@ fun moveBalls(
 
 
 @Composable
+fun DrawBallsCrosshair(fallingBalls: List<FallingBall>){
+    Canvas(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // display the shooters
+        fallingBalls.forEach { ball ->
+            drawCircle(
+                color = ball.color,
+                radius = ball.radius,
+                center = Offset(
+                    ball.x,
+                    ball.y
+                )
+            )
+        }
+        // display the crosshair
+        val centerX = size.width / 2f
+        val centerY = size.height / 2f
+        drawCircle(
+            color = Color.Black,
+            radius = 60f,
+            center = Offset(centerX, centerY),
+            style = Stroke(width = 5f)
+        )
+
+        drawLine(
+            color = Color.Black,
+            start = Offset(centerX - 80f, centerY),
+            end = Offset(centerX + 80f, centerY),
+            strokeWidth = 5f
+        )
+
+        drawLine(
+            color = Color.Black,
+            start = Offset(centerX, centerY - 80f),
+            end = Offset(centerX, centerY + 80f),
+            strokeWidth = 5f
+        )
+    }
+}
+
+
+
+@Composable
 @Preview
 fun MotionControlledShooting(
     modifier: Modifier = Modifier,
@@ -80,7 +126,7 @@ fun MotionControlledShooting(
     ) {
         val maxWidth = this.maxWidth.value
         val maxHeight = this.maxHeight.value
-        
+
         // create initial balls,
         // this couroutine is run once
         LaunchedEffect(Unit) {
@@ -96,22 +142,12 @@ fun MotionControlledShooting(
                 delay(16)
             }
         }
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // display the shooters
-            fallingBalls.forEach { ball ->
-                drawCircle(
-                    color = ball.color,
-                    radius = ball.radius,
-                    center = Offset(
-                        ball.x,
-                        ball.y
-                    )
-                )
-            }
-        }
+        // draw the balls and the crosshair
+        DrawBallsCrosshair(fallingBalls)
     }
+
+
+
 
 }
 
