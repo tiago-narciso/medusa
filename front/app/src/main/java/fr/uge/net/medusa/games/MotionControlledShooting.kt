@@ -3,6 +3,8 @@ package fr.uge.net.medusa.games
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -127,10 +130,18 @@ fun MotionControlledShooting(
     modifier: Modifier = Modifier,
 
     ) {
+    val context = LocalContext.current
     var fallingBalls by remember {
         mutableStateOf<List<FallingBall>>(emptyList()) }
     var cameraOffsetX by remember { mutableFloatStateOf(0f) }
     var cameraOffsetY by remember { mutableFloatStateOf(0f) }
+    val sensorManager  = remember {
+        context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
+    val accelerometer = remember {SensorController(context)
+    }
+
+
 
 
     BoxWithConstraints(
@@ -140,6 +151,7 @@ fun MotionControlledShooting(
     ) {
         val maxWidth = this.maxWidth.value
         val maxHeight = this.maxHeight.value
+
 
         // create initial balls,
         // this couroutine is run once
