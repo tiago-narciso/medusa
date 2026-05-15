@@ -5,7 +5,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import androidx.compose.runtime.remember
+import android.util.Log
+import kotlin.math.abs
 
 class SensorController (context: Context): SensorEventListener {
     private val sensorManager  =
@@ -14,12 +15,17 @@ class SensorController (context: Context): SensorEventListener {
         sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
     // ----------Tilt values-------------//
-    var titltX: Float  = 0f
+    var tiltX: Float  = 0f
         private set // setter is private so value does not get changed
-    var titltY: Float  = 0f
+    var tiltY: Float  = 0f
         private set
+    private var neutralX = 0f
+
+    private var neutralY = 0f
+
+    private var calibrated = false
     // ----------Start listening-------------//
-    fun startListening(){
+    fun startListening() {
         sensorManager.registerListener(
             this,
             accelerometer,
@@ -34,11 +40,77 @@ class SensorController (context: Context): SensorEventListener {
 
     // ----------Sensor Callback-------------//
 
-    override fun onSensorChanged(event: SensorEvent) {
+    override fun onSensorChanged(
+        event: SensorEvent
+    ) {
 
-        titltX = event.values[0]
-        titltX = event.values[1]
+        val rawX = event.values[0]
 
+        val rawY = event.values[1]
+
+        val rawZ = event.values[2]
+
+        // =============================================
+        // PRINT RAW SENSOR VALUES
+        // =============================================
+
+        Log.i(
+            "MotionController",
+            "rawX = $rawX"
+        )
+
+        Log.i(
+            "MotionController",
+            "rawY = $rawY"
+        )
+
+        Log.i(
+            "MotionController",
+            "rawZ = $rawZ"
+        )
+
+        // =============================================
+        // CALIBRATE NEUTRAL POSITION ONCE
+        // =============================================
+
+        if (!calibrated) {
+
+            neutralX = rawX
+
+            neutralY = rawY
+
+            calibrated = true
+        }
+
+        // =============================================
+        // RELATIVE TILT
+        // =============================================
+
+        tiltX =
+            if (abs(rawX - neutralX) < 0.3f)
+                0f
+            else
+                rawX - neutralX
+
+        tiltY =
+            if (abs(rawY - neutralY) < 0.3f)
+                0f
+            else
+                rawY - neutralY
+
+        // =============================================
+        // PRINT RELATIVE VALUES
+        // =============================================
+
+        Log.i(
+            "MotionController",
+            "tiltX = $tiltX"
+        )
+
+        Log.i(
+            "MotionController",
+            "tiltY = $tiltY"
+        )
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {

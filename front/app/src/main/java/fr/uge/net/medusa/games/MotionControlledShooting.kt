@@ -1,17 +1,10 @@
 package fr.uge.net.medusa.games
 
-import android.content.Context
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.hardware.Sensor
-import android.hardware.SensorManager
+import android.util.Log
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -23,14 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.delay
 import kotlin.collections.plus
@@ -40,8 +28,6 @@ import kotlin.random.Random
 class MotionControllerViewModel : ViewModel() {
 
 }
-
-
 // =====================================================
 // Move the balls
 // =====================================================
@@ -72,7 +58,9 @@ fun moveBalls(
     }
 }
 
-
+// =====================================================
+// Draw the balls and the crosshair
+// =====================================================
 /**
  * Draw the balls and crosshair using canvas
  */
@@ -121,6 +109,10 @@ fun DrawBallsCrosshair(fallingBalls: List<FallingBall>,
 }
 
 
+
+// =====================================================
+//  Main game logic
+// =====================================================
 /**
  * Main game logic
  */
@@ -135,13 +127,14 @@ fun MotionControlledShooting(
         mutableStateOf<List<FallingBall>>(emptyList()) }
     var cameraOffsetX by remember { mutableFloatStateOf(0f) }
     var cameraOffsetY by remember { mutableFloatStateOf(0f) }
-    val sensorManager  = remember {
-        context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    val sensorController = remember {SensorController(context) }
+    DisposableEffect(Unit) {
+        sensorController.startListening()
+        // clean up
+        onDispose {
+            sensorController.stopListening()
+        }
     }
-    val accelerometer = remember {SensorController(context)
-    }
-
-
 
 
     BoxWithConstraints(
@@ -164,6 +157,21 @@ fun MotionControlledShooting(
         // game loop: balls fall down
         LaunchedEffect(Unit) {
             while (true) {
+                val targetX = -sensorController.tiltX * 80f
+                val targetY = -sensorController.tiltY * 80f
+                cameraOffsetX += (targetX - cameraOffsetX) * 0.1f
+                cameraOffsetY += (targetY - cameraOffsetY) * 0.1f
+                cameraOffsetX =
+                    cameraOffsetX.coerceIn(-200f, 200f)
+
+                cameraOffsetY =
+                    cameraOffsetY.coerceIn(-200f, 200f)
+                Log.i("MotionController", "titltx ${sensorController.tiltX}")
+                Log.i("MotionController", "titlty ${sensorController.tiltX}")
+                Log.i("MotionController", "cameraOffsetX ${cameraOffsetX}")
+                Log.i("MotionController", "cameraOffsetY ${cameraOffsetY}")
+
+
                 fallingBalls = moveBalls(fallingBalls, maxHeight, maxWidth)
                 delay(16)
             }
