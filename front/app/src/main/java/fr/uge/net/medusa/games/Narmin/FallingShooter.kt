@@ -1,4 +1,4 @@
-package fr.uge.net.medusa.games
+package fr.uge.net.medusa.games.Narmin
 
 data class FallingShooter(
     val shooter: Shooter,

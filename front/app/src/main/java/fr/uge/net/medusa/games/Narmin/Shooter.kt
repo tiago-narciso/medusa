@@ -1,4 +1,4 @@
-package fr.uge.net.medusa.games
+package fr.uge.net.medusa.games.Narmin
 
 import android.content.Context
 

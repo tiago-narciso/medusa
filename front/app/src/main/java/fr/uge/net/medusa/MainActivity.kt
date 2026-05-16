@@ -9,8 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import fr.uge.net.medusa.games.MotionControlledShooting
-import fr.uge.net.medusa.navigation.MedusaNavHost
+import fr.uge.net.medusa.games.Narmin.MotionControlledShooting
 import fr.uge.net.medusa.ui.theme.MedusaTheme
 
 class MainActivity : ComponentActivity() {

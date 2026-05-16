@@ -1,4 +1,4 @@
-package fr.uge.net.medusa.games
+package fr.uge.net.medusa.games.Narmin
 
 import androidx.compose.ui.graphics.Color
 import kotlin.random.Random
