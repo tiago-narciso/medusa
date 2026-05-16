@@ -6,8 +6,8 @@ import kotlin.random.Random
 data class FallingBall(
     val color: Color,
     val radius: Float,
-    val x: Float,
-    val y: Float,
+    val centerX: Float,
+    val centerY: Float,
     val speed: Float
 
 ){
@@ -25,9 +25,9 @@ data class FallingBall(
                 Color.Cyan
             ).random(),
             radius = Random.nextFloat() * 40f + 30f,
-            x = Random.nextFloat() * screenWidth,
+            centerX = Random.nextFloat() * screenWidth,
             // spawn above screen
-            y = Random.nextFloat() * -screenHeight,
+            centerY = Random.nextFloat() * -screenHeight,
             speed = Random.nextFloat() * 10f + 5f
         )
     }
