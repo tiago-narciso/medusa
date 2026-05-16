@@ -1,4 +1,4 @@
-package fr.uge.net.medusa.games.Narmin
+package fr.uge.net.medusa.games.Narmin.sensor
 
 import android.content.Context
 import android.hardware.Sensor
