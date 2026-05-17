@@ -2,6 +2,7 @@ package fr.uge.net.medusa.games.Narmin.utils
 
 import android.content.Context
 import android.content.res.Resources
+import android.os.SystemClock
 import android.util.DisplayMetrics
 
 class Utils {
@@ -24,6 +25,17 @@ class Utils {
 
         fun convertMillisecondsToSeconds(time:Long):Long{
             return time/1000
+        }
+        fun computeRemainingSeconds(
+            startTime: Long,
+            gameDurationMillis: Long
+        ): Long {
+            val elapsed =
+                SystemClock.elapsedRealtime() - startTime
+
+            return (
+                    gameDurationMillis - elapsed
+                    ) / 1000
         }
     }
 }

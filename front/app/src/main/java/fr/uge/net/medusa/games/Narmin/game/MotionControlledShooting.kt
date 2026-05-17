@@ -1,14 +1,15 @@
-package fr.uge.net.medusa.games.Narmin
+package fr.uge.net.medusa.games.Narmin.game
 
-import android.content.Context
-import android.content.res.Resources
 import android.os.SystemClock
-import android.util.DisplayMetrics
-import android.util.Log
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -22,12 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import fr.uge.net.medusa.games.Narmin.Elements.Crosshair
 import fr.uge.net.medusa.games.Narmin.Elements.FallingBall
@@ -40,7 +41,6 @@ import kotlin.collections.plus
 import kotlin.math.abs
 import kotlin.math.sqrt
 import kotlin.random.Random
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -70,19 +70,6 @@ class MotionControllerViewModel : ViewModel() {
         val sumRadii = ball.radius + crosshair.radius
         return distanceCenters in distanceRadii..sumRadii
 
-    }
-
-
-    fun computeRemainingSeconds(
-        startTime: Long,
-        gameDurationMillis: Long
-    ): Long {
-        val elapsed =
-            SystemClock.elapsedRealtime() - startTime
-
-        return (
-                gameDurationMillis - elapsed
-                ) / 1000
     }
 
 
@@ -116,6 +103,123 @@ class MotionControllerViewModel : ViewModel() {
 
 
 
+
+    @Composable
+    fun ShootingGame(modifier: Modifier = Modifier) {
+        var gameStarted by remember { mutableStateOf(false) }
+        var gameFinished by remember { mutableStateOf(false) }
+
+        var score by remember { mutableIntStateOf(0) }
+        val minScore = 10
+        val gameDuration = 30.seconds
+        var won by remember { mutableStateOf(false) }
+
+        when {
+            // can end modifier here
+            !gameStarted -> {
+                MemorySettingsScreen(
+                    gameDuration.inWholeSeconds,
+                    minScore,
+                    onStartGame = {  -> gameStarted = true })
+            }
+            gameFinished -> {
+                MemoryEndScreen(won, score, onResetGame = {
+                    score = 0
+                    gameStarted = false
+                    gameFinished = false
+                })
+            }
+            else -> {
+                MotionControlledShootingManager(
+                    modifier,
+                    minScore,
+                    gameDuration.inWholeMilliseconds,
+                    startTime = SystemClock.elapsedRealtime(),
+                    onEndGame = { nbBalls , wonGame->
+                        score = nbBalls
+                        gameFinished = true
+                        won = wonGame
+                    })
+
+            }
+
+        }
+    }
+
+    @Composable
+    fun MemorySettingsScreen(
+        gameDuration: Long,
+        minNbPoints: Int,
+        onStartGame: () -> Unit
+    ) {
+        Column(
+            Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+            Text(text = "Motion Shooting game",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text =
+                "Shoot at least $minNbPoints balls\n" +
+                        "during $gameDuration seconds",
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center)
+            Spacer(modifier = Modifier.height(40.dp))
+            Button(
+                onClick = {
+                    onStartGame()
+                }
+            ) {
+                Text(text = "Start",
+                    fontSize = 20.sp,
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun MemoryEndScreen(
+        won: Boolean,
+        score: Int,
+        onResetGame: () -> Unit) {
+        Column (
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+
+        ) {
+            if(won){
+                Text(
+                    text = " YOU WON!!"
+                )
+            }else{
+                Text(
+                    text = " YOU LOST HAHAHA!!"
+                )
+            }
+            Text(
+                text = " Number of balls shot: $score"
+            )
+            Button(
+                onClick = {
+                    onResetGame()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+
+            )
+            {
+                Text("Reset")
+            }
+        }
+    }
+
+
     // =====================================================
     //  Main game logic
     // =====================================================
@@ -123,9 +227,12 @@ class MotionControllerViewModel : ViewModel() {
      * Main game logic
      */
     @Composable
-    fun MotionControlledShooting(
+    fun MotionControlledShootingManager(
         modifier: Modifier = Modifier,
-
+        maxScore : Int,
+        gameDuration: Long,
+        startTime: Long,
+        onEndGame: (Int, Boolean) -> Unit,
         ) {
         // Fields
         val context = LocalContext.current
@@ -133,10 +240,6 @@ class MotionControllerViewModel : ViewModel() {
         var cameraOffsetX by remember { mutableFloatStateOf(0f) }
         var cameraOffsetY by remember { mutableFloatStateOf(0f) }
         var score by remember { mutableIntStateOf(0 )}
-        // Player has to catch 10 balls within 30 seconds
-        val maxScore = 10
-        val gameDuration = 30.seconds
-        var startTime by remember { mutableLongStateOf(SystemClock.elapsedRealtime()) }
         var message by remember { mutableStateOf("") }
         val sensorController = remember { SensorController(context) }
 
@@ -170,18 +273,18 @@ class MotionControllerViewModel : ViewModel() {
             // game loop: balls fall down
             LaunchedEffect(Unit) {
                 while (true) {
-                    val remainingSeconds =
-                        computeRemainingSeconds(
+                    val remainingSeconds = Utils.computeRemainingSeconds(
                             startTime,
-                            gameDuration.inWholeMilliseconds
-                        )
+                            gameDuration)
                     message = "Score: $score | Time: $remainingSeconds"
-                    if(remainingSeconds <= 0){
+                    if(remainingSeconds == 0.toLong()){
+                        var won = false
                         if(score == maxScore){
-                                ; // won
+                               won = true
                         }else{
-                            // lost
+                               won = false
                         }
+                        onEndGame(score, won)
                     }
                     val targetX = -sensorController.tiltX * 80f
                     val targetY = -sensorController.tiltY * 80f
@@ -204,12 +307,7 @@ class MotionControllerViewModel : ViewModel() {
                         cameraOffsetX,
                         cameraOffsetY,
                         maxWidth,
-                        onHit = {
-                            score++
-                            if (score == maxScore) {
-                                // won
-                            }
-                        }
+                        onHit = { score++ }
                     )
                     delay(16)
                 }
