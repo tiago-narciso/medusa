@@ -17,7 +17,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -190,31 +189,38 @@ class MotionControllerViewModel : ViewModel() {
         onResetGame: () -> Unit) {
         Column (
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center
-
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if(won){
-                Text(
-                    text = " YOU WON!!"
-                )
-            }else{
-                Text(
-                    text = " YOU LOST HAHAHA!!"
-                )
-            }
             Text(
-                text = " Number of balls shot: $score"
+            text =
+                if (won)
+                    " YOU WON!"
+                else
+                    "GAME OVER HAHAHAHA",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            color =
+                if (won)
+                    Color(0xFF2E7D32)
+                else
+                    Color(0xFFC62828)
             )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Balls shot: $score",
+                fontSize = 22.sp,
+                color = Color.DarkGray
+            )
+            Spacer(modifier = Modifier.height(40.dp))
             Button(
-                onClick = {
-                    onResetGame()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-
-            )
-            {
-                Text("Reset")
+                onClick = { onResetGame() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Play again",
+                    fontSize = 20.sp,
+                )
             }
         }
     }
@@ -300,7 +306,9 @@ class MotionControllerViewModel : ViewModel() {
                         0.1f,
                         200f
                     )
-                    fallingBalls = Animate.moveBalls(fallingBalls, maxHeight, maxWidth)
+                    var speedMultiplier = 1f +(score * 0.1f)
+                    fallingBalls = Animate.moveBalls(fallingBalls, maxHeight,
+                        maxWidth, speedMultiplier)
                     fallingBalls =  processCollisions(
                         fallingBalls,
                         crosshair,

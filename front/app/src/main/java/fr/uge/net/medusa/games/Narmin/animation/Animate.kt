@@ -1,6 +1,5 @@
 package fr.uge.net.medusa.games.Narmin.animation
 
-import androidx.compose.ui.geometry.Offset
 import fr.uge.net.medusa.games.Narmin.Elements.FallingBall
 import kotlin.random.Random
 
@@ -17,12 +16,15 @@ class Animate {
          * of animation
          */
         fun moveBalls(
-            fallingBalls: List<FallingBall>, screenHeight: Float, screenWidth: Float
+            fallingBalls: List<FallingBall>,
+            screenHeight: Float,
+            screenWidth: Float,
+            speedMultiplier: Float
         ): List<FallingBall> {
 
             return fallingBalls.map { ball ->
                 // y increases -> ball is falling
-                val newY = ball.centerY + ball.speed
+                val newY = ball.centerY +  (ball.speed * speedMultiplier)
                 // if ball left screen
                 if (newY > screenHeight) {
                     // put ball above the screen so it falls again
