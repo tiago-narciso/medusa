@@ -107,18 +107,15 @@ class MotionControllerViewModel : ViewModel() {
     fun ShootingGame(modifier: Modifier = Modifier) {
         var gameStarted by remember { mutableStateOf(false) }
         var gameFinished by remember { mutableStateOf(false) }
-
         var score by remember { mutableIntStateOf(0) }
-        val minScore = 10
-        val gameDuration = 30.seconds
         var won by remember { mutableStateOf(false) }
 
         when {
             // can end modifier here
             !gameStarted -> {
                 MemorySettingsScreen(
-                    gameDuration.inWholeSeconds,
-                    minScore,
+                    GameConfig.GAME_DURATION.inWholeSeconds,
+                    GameConfig.MIN_SCORE,
                     onStartGame = {  -> gameStarted = true })
             }
             gameFinished -> {
@@ -131,8 +128,8 @@ class MotionControllerViewModel : ViewModel() {
             else -> {
                 MotionControlledShootingManager(
                     modifier,
-                    minScore,
-                    gameDuration.inWholeMilliseconds,
+                    GameConfig.MIN_SCORE,
+                    GameConfig.GAME_DURATION.inWholeMilliseconds,
                     startTime = SystemClock.elapsedRealtime(),
                     onEndGame = { nbBalls , wonGame->
                         score = nbBalls
@@ -271,7 +268,7 @@ class MotionControllerViewModel : ViewModel() {
             // create initial balls,
             // this couroutine is run once
             LaunchedEffect(Unit) {
-                repeat(3) {
+                repeat(GameConfig.NB_BALLS) {
                     val ball = FallingBall.createBall(maxHeight, maxWidth)
                     fallingBalls = fallingBalls + ball
                 }
@@ -292,21 +289,22 @@ class MotionControllerViewModel : ViewModel() {
                         }
                         onEndGame(score, won)
                     }
-                    val targetX = -sensorController.tiltX * 80f
-                    val targetY = -sensorController.tiltY * 80f
+                    val targetX = -sensorController.tiltX * GameConfig.CAMERA_SENSITIVITY
+                    val targetY = -sensorController.tiltY * GameConfig.CAMERA_SENSITIVITY
                     cameraOffsetX = Animate.updateCameraOffset(
                         cameraOffsetX,
                         targetX,
-                        0.1f,
-                        200f
+                        GameConfig.SMOOTHING,
+                        GameConfig.MAX_OFFSET
                     )
                     cameraOffsetY = Animate.updateCameraOffset(
                         cameraOffsetY,
                         targetY,
-                        0.1f,
-                        200f
+                        GameConfig.SMOOTHING,
+                        GameConfig.MAX_OFFSET
                     )
-                    var speedMultiplier = 1f +(score * 0.1f)
+                    // increase speed by 10 percent every yime the score increases
+                    var speedMultiplier = 1f +(score * GameConfig.speedMultiplier)
                     fallingBalls = Animate.moveBalls(fallingBalls, maxHeight,
                         maxWidth, speedMultiplier)
                     fallingBalls =  processCollisions(
