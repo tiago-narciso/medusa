@@ -62,7 +62,7 @@ fun LoginScreenActivity(
     //var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     // Initialize API service
-    val apiService = ApiProvider.getRealApi();
+    val apiService = ApiProvider.getMockApi();
     val translations = mapOf(
         "network_error" to stringResource(R.string.error_network),
         "unknown_error" to stringResource(R.string.error_unknown),
