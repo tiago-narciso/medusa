@@ -1,4 +1,4 @@
-package fr.uge.net.medusa.games.Narmin.draw
+package fr.uge.net.medusa.games.Narmin.animation
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +8,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import fr.uge.net.medusa.games.Narmin.Elements.Crosshair
 import fr.uge.net.medusa.games.Narmin.Elements.FallingBall
-import kotlin.collections.forEach
 
 class Draw {
 
@@ -29,7 +28,7 @@ class Draw {
             cameraOffsetY: Float,
         ) {
             Canvas(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.Companion.fillMaxSize()
             ) {
                 // display the balls
                 fallingBalls.forEach { ball ->
@@ -54,7 +53,7 @@ class Draw {
             crosshair: Crosshair
         ) {
             Canvas(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.Companion.fillMaxSize()
             ) {
 
                 // outer circle
