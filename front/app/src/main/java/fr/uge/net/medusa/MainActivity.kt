@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import fr.uge.net.medusa.games.Narmin.game.*
+import fr.uge.net.medusa.navigation.MedusaNavHost
 import fr.uge.net.medusa.ui.theme.MedusaTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,13 +21,11 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             MedusaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    /*MedusaNavHost(
+                    MedusaNavHost(
                         navController = navController,
                         modifier = Modifier
                             .padding(innerPadding)
-                    )*/
-                    ShootingGame( modifier = Modifier
-                        .padding(innerPadding))
+                    )
                 }
             }
         }
