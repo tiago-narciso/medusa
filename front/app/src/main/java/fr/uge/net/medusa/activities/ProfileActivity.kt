@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 
 @Composable
-public fun ProfileActivity(
+fun ProfileActivity(
     currentRoute: String,
     onNavigate: (String) -> Unit,
     innerPadding: PaddingValues,

@@ -44,7 +44,7 @@ private val bottomTabs = listOf(
 
 
 @Composable
-public fun BottomNavigationBar(
+fun BottomNavigationBar(
     currentRoute: String,
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier,

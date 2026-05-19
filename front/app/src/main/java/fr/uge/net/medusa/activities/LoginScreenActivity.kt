@@ -39,27 +39,19 @@ import retrofit2.HttpException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-
-class LoginViewModel : ViewModel() {
-    var login by  mutableStateOf("")
-    var password by  mutableStateOf("")
-    var isLoading by mutableStateOf(false)
-}
-
 @Composable
 @Preview
 fun LoginScreenActivity(
     modifier: Modifier = Modifier,
     onNavigateToRegister: () -> Unit = {},
     onAuthenticated: () -> Unit = {},
-    viewModel: LoginViewModel = viewModel()
 
 ) {
     val context = LocalContext.current
     val tokenStore = remember(context) { TokenStore(context.applicationContext) }
-    //var login by remember { mutableStateOf("") }
-    //var password by remember { mutableStateOf("") }
-    //var isLoading by remember { mutableStateOf(false) }
+    var login by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     // Initialize API service
     val apiService = ApiProvider.getMockApi();
@@ -86,8 +78,8 @@ fun LoginScreenActivity(
         )
         Spacer(modifier = Modifier.height(64.dp))
         StyledTextField(
-            value = viewModel.login,
-            onValueChange = { v -> viewModel.login = v },
+            value = login,
+            onValueChange = { v -> login = v },
             placeholder = translations["username_placeholder"]!!,
         )
         Spacer(
@@ -95,23 +87,23 @@ fun LoginScreenActivity(
             = Modifier.height(24.dp)
         )
         StyledTextField(
-            value = viewModel.password,
-            onValueChange = { v -> viewModel.password = v },
+            value = password,
+            onValueChange = { v -> password = v },
             placeholder = translations["password_placeholder"]!!,
             isPassword = true
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             text = translations["login_button"]!!,
-            disabled = viewModel.login.isEmpty() || viewModel.password.isEmpty(),
-            isLoading = viewModel.isLoading
+            disabled = login.isEmpty() || password.isEmpty(),
+            isLoading = isLoading
         ) {
             coroutineScope.launch {
-                viewModel.isLoading = true;
+                isLoading = true;
                 // Login POST request
                 try {
                     val loginResponse = apiService.login(
-                        LoginRequest(viewModel.login, viewModel.password)
+                        LoginRequest(login, password)
                     )
                     // todo: save token, get user info and navigate to main activity
                     // if token not null execute the block
@@ -124,7 +116,7 @@ fun LoginScreenActivity(
                         translations["network_error"])
 
                 } finally {
-                    viewModel.isLoading = false
+                    isLoading = false
                 }
             }
         }
