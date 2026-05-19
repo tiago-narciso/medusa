@@ -12,4 +12,7 @@ public object Routes {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val MAIN_GAME = "main_game"
+    const val PROFILE = "profile"
+    const val RANKING = "ranking"
+    const val SETTINGS = "settings"
 }
