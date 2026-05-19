@@ -43,4 +43,8 @@ class MockGameApi: IGameApi {
         }
         return RegisterResponse(token = "token")
     }
+
+    override suspend fun getCards(): CardsResponse {
+        TODO("Not yet implemented")
+    }
 }

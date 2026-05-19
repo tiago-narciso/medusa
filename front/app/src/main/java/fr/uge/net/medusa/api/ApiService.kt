@@ -2,6 +2,7 @@ package fr.uge.net.medusa.api
 
 import fr.uge.net.medusa.models.*
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiService {
@@ -29,4 +30,16 @@ interface ApiService {
     suspend fun register(
         @Body request: RegisterRequest
     ): RegisterResponse
+
+
+    /**
+     * Sends a GET  request to the backend API to get user cards
+     * @return CardsResponse containing a list of owned cards
+     */
+    @GET("user/cards")
+    suspend fun getCards(
+    ): CardsResponse
+
+
+
 }

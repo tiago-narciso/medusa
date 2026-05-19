@@ -17,6 +17,7 @@ data class ErrorResponse(
     val error: String
 ){
     companion object{
+
         /**
          *
          * Parses the error returned from the back into an ErrorResponse object
