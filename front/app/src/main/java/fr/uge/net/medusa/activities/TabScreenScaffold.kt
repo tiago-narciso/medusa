@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import fr.uge.net.medusa.ui.components.BottomNavigationBar
+import fr.uge.net.medusa.ui.components.navigation.BottomNavigationBar
 
 /**
  * Full-screen tab with centered title and bottom navigation, shared by Profile, Ranking, Settings.

@@ -47,7 +47,7 @@ class RegisterViewModel : ViewModel() {
 @Preview
 fun RegisterScreenActivity(modifier: Modifier = Modifier,
                            onAuthenticated: () -> Unit = {},
-                           viewModel: LoginViewModel = viewModel()
+                           viewModel: RegisterViewModel = viewModel()
 ) {
     val context = LocalContext.current
     //var login by remember { mutableStateOf("") }
