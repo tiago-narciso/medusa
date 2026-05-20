@@ -39,13 +39,13 @@ Outer Row
 
 
 @Composable
-fun PlayerCard(
+fun PlayerItem(
 
     playerName: String,
 
     playerPower: Int,
 
-    playerRank: Int
+    playerRank: Int = 0
 ) {
 
     Row(
@@ -93,19 +93,20 @@ fun PlayerCard(
             }
         }
         /*
+        /*
          * Rank
          */
         Text(
             text = "#$playerRank",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
-        )
+        )*/
     }
 }
 @Composable
 @Preview
-fun PlayerCardPreview(){
-    PlayerCard(
+fun PlayerItemPreview(){
+    PlayerItem(
         playerName = "narmin",
         playerPower = 1000,
         playerRank = 24

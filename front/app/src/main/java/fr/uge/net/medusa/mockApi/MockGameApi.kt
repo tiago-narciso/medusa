@@ -3,6 +3,7 @@ package fr.uge.net.medusa.mockApi
 import fr.uge.net.medusa.api.IGameApi
 
 import fr.uge.net.medusa.models.*
+import java.util.UUID
 
 /**
  * mock implementation of the game API.
@@ -44,7 +45,38 @@ class MockGameApi: IGameApi {
         return RegisterResponse(token = "token")
     }
 
-    override suspend fun getCards(): CardsResponse {
-        TODO("Not yet implemented")
+    override suspend fun getCards():
+            CardsResponse {
+
+        return CardsResponse(
+            cards = listOf(
+                CardResponse(
+                    wikidataId = UUID.randomUUID(),
+                    uniqueId = UUID.randomUUID(),
+                    placeOfBirth = "Paris",
+                    power = 120
+                ),
+                CardResponse(
+                    wikidataId = UUID.randomUUID(),
+                    uniqueId = UUID.randomUUID(),
+                    placeOfBirth = "Paris",
+                    power = 80
+                ),
+
+                CardResponse(
+                    wikidataId = UUID.randomUUID(),
+                    uniqueId = UUID.randomUUID(),
+                    placeOfBirth = "Tokyo",
+                    power = 150
+                ),
+
+                CardResponse(
+                    wikidataId = UUID.randomUUID(),
+                    uniqueId = UUID.randomUUID(),
+                    placeOfBirth = "Rome",
+                    power = 60
+                )
+            )
+        )
     }
 }

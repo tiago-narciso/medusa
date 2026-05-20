@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import fr.uge.net.medusa.activities.GameScreen
 import fr.uge.net.medusa.activities.LoginScreenActivity
 import fr.uge.net.medusa.activities.ProfileActivity
+import fr.uge.net.medusa.activities.ProfileScreenActivity
 import fr.uge.net.medusa.activities.RankingActivity
 import fr.uge.net.medusa.activities.RegisterScreenActivity
 import fr.uge.net.medusa.activities.SettingsActivity
@@ -44,7 +45,7 @@ fun MedusaNavHost(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues
 ) {
-    NavHost(navController = navController, startDestination = Routes.MAIN_GAME) {
+    NavHost(navController = navController, startDestination = Routes.LOADING) {
         composable(Routes.LOADING) {
             LaunchedEffect(Unit) {
                 delay(1000)
@@ -90,7 +91,7 @@ fun MedusaNavHost(
             )
         }
         composable(Routes.PROFILE) {
-            ProfileActivity(
+            ProfileScreenActivity (
                 currentRoute = Routes.PROFILE,
                 innerPadding = innerPadding,
                 onNavigate = { route ->

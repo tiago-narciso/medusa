@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.osmdroid.android)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.ui)
     //implementation(libs.androidx.compose.remote.creation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
