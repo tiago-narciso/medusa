@@ -52,7 +52,7 @@ class MockGameApi: IGameApi {
         return CardsResponse(
             cards = listOf(
                 Card(
-                    wikidataId = UUID.randomUUID(),
+                    wikidataId = "",
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Paris",
                     power = 120,
@@ -60,7 +60,7 @@ class MockGameApi: IGameApi {
                     personality =  "naruto"
                 ),
                 Card(
-                    wikidataId = UUID.randomUUID(),
+                    wikidataId = "",
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Paris",
                     power = 80,
@@ -70,7 +70,7 @@ class MockGameApi: IGameApi {
                 ),
 
                 Card(
-                    wikidataId = UUID.randomUUID(),
+                    wikidataId = "",
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Tokyo",
                     power = 150,
@@ -80,7 +80,7 @@ class MockGameApi: IGameApi {
                 ),
 
                 Card(
-                    wikidataId = UUID.randomUUID(),
+                    wikidataId = "",
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Rome",
                     power = 60,

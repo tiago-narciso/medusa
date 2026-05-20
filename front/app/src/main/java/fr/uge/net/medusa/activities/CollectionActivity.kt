@@ -29,8 +29,8 @@ fun CollectionActivity(
 
     collection: CardsCollection,
     currentRoute: String,
-    onNavigate: (String) -> Unit,
     innerPadding: PaddingValues,
+    onNavigate: (String) -> Unit,
     onNavigateToCard: (Card) -> Unit
 ) {
 
@@ -60,9 +60,7 @@ fun CollectionActivity(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             Spacer(modifier = Modifier.height(4.dp))
-
             /*
              * Total collection score
              */
