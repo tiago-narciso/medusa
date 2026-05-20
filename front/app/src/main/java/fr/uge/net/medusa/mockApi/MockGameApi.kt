@@ -54,27 +54,31 @@ class MockGameApi: IGameApi {
                     wikidataId = UUID.randomUUID(),
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Paris",
-                    power = 120
+                    power = 120,
+                    "2025-07-21T14:30:00Z"
                 ),
                 CardResponse(
                     wikidataId = UUID.randomUUID(),
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Paris",
-                    power = 80
+                    power = 80,
+                    "2024-07-21T14:30:00Z"
                 ),
 
                 CardResponse(
                     wikidataId = UUID.randomUUID(),
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Tokyo",
-                    power = 150
+                    power = 150,
+                    "2023-07-21T14:30:00Z"
                 ),
 
                 CardResponse(
                     wikidataId = UUID.randomUUID(),
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Rome",
-                    power = 60
+                    power = 60,
+                    "2022-07-21T14:30:00Z"
                 )
             )
         )

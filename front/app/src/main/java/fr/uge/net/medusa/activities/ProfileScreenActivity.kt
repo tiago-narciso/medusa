@@ -39,6 +39,17 @@ import fr.uge.net.medusa.utils.ErrorHandler
 import kotlinx.coroutines.launch
 import kotlin.collections.emptyList
 
+fun fibonacci(num: Int): Int {
+    var a = 0
+    var b = 1
+    var tmp: Int
+    for (i in 2..num) {
+        tmp = a + b
+        a = b
+        b = tmp
+    }
+    return b
+}
 
 @Composable
 fun ProfileScreenActivity(
@@ -71,11 +82,18 @@ fun ProfileScreenActivity(
             // Convert grouped cards into CollectionUi objects
             collections = groupedCards.map { elt ->
                 val placeOfBirth = elt.key
-                val cards = elt.value
+                val cards = elt.value.sortedBy {
+                    it.acquisitionDate
+                }
+                // fibonacci multiplier
+                val collectionPower = cards.mapIndexed{index, card->
+                    val multiplier = fibonacci(index + 1)
+                    card.power * multiplier
+                }.sum()
                 CollectionUi(
                     placeOfBirth,
                     cards.size,
-                    cards.sumOf { card -> card.power }
+                    collectionPower
 
                 )
             }
@@ -103,6 +121,7 @@ fun ProfileScreenActivity(
              * Player profile Item
              */
             PlayerItem(
+                // TODO : get player login
                 playerName = "Player",
                 playerPower = playerPower,
             )
@@ -154,7 +173,7 @@ fun PreviewProfileScreenActivity() {
         CollectionUi(
             "Paris",
             40,
-            120
+            120,
         ),
 
         CollectionUi(
