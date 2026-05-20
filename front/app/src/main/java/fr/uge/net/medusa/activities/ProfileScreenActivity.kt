@@ -54,7 +54,7 @@ fun fibonacci(num: Int): Int {
 @Composable
 fun ProfileScreenActivity(
     currentRoute: String,
-    onNavigate: (String) -> Unit,
+    onNavigate: (CollectionUi) -> Unit,
     innerPadding: PaddingValues,
 
     ) {
@@ -93,8 +93,8 @@ fun ProfileScreenActivity(
                 CollectionUi(
                     placeOfBirth,
                     cards.size,
-                    collectionPower
-
+                    collectionPower,
+                    cards
                 )
             }
         } catch (e: Exception) {
@@ -141,7 +141,7 @@ fun ProfileScreenActivity(
                             collection = collection,
                             onClick = {
                                 onNavigate(
-                                    collection.name
+                                    collection
                                 )
                             }
                         )
@@ -164,91 +164,7 @@ fun ProfileScreenActivity(
     }
 
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewProfileScreenActivity() {
 
-    val fakeCollections = listOf(
-
-        CollectionUi(
-            "Paris",
-            40,
-            120,
-        ),
-
-        CollectionUi(
-            "Tokyo",
-            12,
-            80
-        ),
-
-        CollectionUi(
-            "Rome",
-            8,
-            45
-        )
-    )
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxSize()
-        ) {
-
-            Spacer(
-                modifier =
-                    Modifier.height(20.dp)
-            )
-
-            PlayerItem(
-
-                playerName = "Nermine",
-
-                playerPower = 245
-            )
-
-            Spacer(
-                modifier =
-                    Modifier.height(16.dp)
-            )
-
-            LazyColumn {
-
-                itemsIndexed(
-                    fakeCollections
-                ) { index, collection ->
-
-                    CollectionItem(
-
-                        index = index,
-
-                        collection = collection,
-
-                        onClick = {}
-                    )
-
-                    Spacer(
-                        modifier =
-                            Modifier.height(12.dp)
-                    )
-                }
-            }
-        }
-        /*
-  * Bottom navigation bar
-  */
-        BottomNavigationBar(
-            currentRoute = Routes.PROFILE,
-            onNavigate = {  },
-            modifier = Modifier.align(Alignment.BottomCenter),
-            innerPadding = PaddingValues()
-        )
-    }
-}
 
 
 
