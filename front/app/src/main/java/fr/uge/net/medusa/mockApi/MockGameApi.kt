@@ -92,7 +92,7 @@ class MockGameApi: IGameApi {
         )
     }
 
-    override suspend fun near(request: NearRequest): NearResponse {
+    override suspend fun near(token: String, request: NearRequest): NearResponse {
         TODO("Not yet implemented")
     }
 }

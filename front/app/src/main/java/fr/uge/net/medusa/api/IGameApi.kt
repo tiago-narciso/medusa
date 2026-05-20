@@ -27,8 +27,7 @@ interface IGameApi {
     suspend fun login(request: LoginRequest): LoginResponse // returns the login token
     suspend fun register(request: RegisterRequest): RegisterResponse // returns the login token
     suspend fun getCards(): CardsResponse
-
-    suspend fun near(request: NearRequest): NearResponse
+    suspend fun near(token: String, request: NearRequest): NearResponse
 
 
 }

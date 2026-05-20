@@ -28,7 +28,7 @@ class RealGameApi : IGameApi {
         return apiService.getCards()
     }
 
-    override suspend fun near(request: NearRequest): NearResponse {
-        return apiService.near(request);
+    override suspend fun near(token: String, request: NearRequest): NearResponse {
+        return apiService.near(token, request);
     }
 }

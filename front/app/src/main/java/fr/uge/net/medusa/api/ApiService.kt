@@ -3,6 +3,7 @@ package fr.uge.net.medusa.api
 import fr.uge.net.medusa.models.*
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiService {
@@ -42,9 +43,9 @@ interface ApiService {
 
     @POST("user/near")
     suspend fun near(
-       @Body request: NearRequest
+        @Header("Authorization") token: String,
+        @Body request: NearRequest
     ): NearResponse
-
 
 
 }

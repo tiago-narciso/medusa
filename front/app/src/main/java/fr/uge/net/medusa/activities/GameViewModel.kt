@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import fr.uge.net.medusa.api.ApiProvider
 import fr.uge.net.medusa.data.NearCard
 import fr.uge.net.medusa.models.NearRequest
+import fr.uge.net.medusa.models.TokenStore
 import fr.uge.net.medusa.services.DeviceLocationService
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -25,6 +26,8 @@ class GameViewModel : ViewModel() {
         data object PermissionRequired : GameStatus
         data object LocationDisabled : GameStatus
         data object NoPosition : GameStatus
+
+        data object NotLogged : GameStatus
     }
 
     val apiService = ApiProvider.getRealApi();
@@ -78,6 +81,7 @@ class GameViewModel : ViewModel() {
         positionLoopJob = viewModelScope.launch {
             while (isActive) {
                 refreshGameStatusAndPosition(appContext)
+                refreshCards(appContext)
                 delay(POLLING_DELAY_MS)
             }
         }
@@ -123,11 +127,18 @@ class GameViewModel : ViewModel() {
             return
         }
 
-        val nearRequest = NearRequest(currentPosition.latitude, currentPosition.longitude);
-        cards = apiService.near(nearRequest).cards;
-
         updateUserPosition(currentPosition)
         gameStatus = GameStatus.Ready
+    }
+
+    private suspend fun refreshCards(context: Context) {
+        val nearRequest = NearRequest(userPosition.latitude, userPosition.longitude);
+        val token = TokenStore(context).getToken();
+        if (token == null) {
+            gameStatus = GameStatus.NotLogged
+            return
+        }
+        cards = apiService.near(token, nearRequest).cards;
     }
 
     override fun onCleared() {
@@ -138,8 +149,8 @@ class GameViewModel : ViewModel() {
 
     private fun GameStatus.requiresUserActionOnLoading(): Boolean {
         return this == GameStatus.NoInternet ||
-            this == GameStatus.PermissionRequired ||
-            this == GameStatus.LocationDisabled
+                this == GameStatus.PermissionRequired ||
+                this == GameStatus.LocationDisabled
     }
 
     companion object {

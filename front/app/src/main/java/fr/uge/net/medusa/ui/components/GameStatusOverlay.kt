@@ -65,6 +65,13 @@ fun GameStatusOverlay(
             primaryButtonText = stringResource(R.string.game_status_retry),
             onPrimaryAction = onRetry
         )
+
+        GameViewModel.GameStatus.NotLogged -> OverlayContent(
+            title = "todo",
+            message = "todo",
+            primaryButtonText = "todo",
+            onPrimaryAction = onRetry
+        )
     }
 
     if (overlayContent == null) {
