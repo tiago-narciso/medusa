@@ -15,7 +15,6 @@ public object Routes {
     const val PROFILE = "profile"
     const val RANKING = "ranking"
     const val SETTINGS = "settings"
-
     const val COLLECTION = "collection"
-
+    const val CARD = "card"
 }

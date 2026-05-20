@@ -1,5 +1,6 @@
 package fr.uge.net.medusa.activities
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,9 +30,10 @@ fun CollectionActivity(
 
     collection: CardsCollection,
     currentRoute: String,
-    onNavigate: (String) -> Unit,
     innerPadding: PaddingValues,
-    onNavigateToCard: (Card) -> Unit
+    onNavigate: (String) -> Unit,
+    onNavigateToCard: (Card) -> Unit,
+    onBack:() -> Unit
 ) {
 
     Box(
@@ -51,7 +53,8 @@ fun CollectionActivity(
             ) {
                 Text(
                     text = "←",
-                    fontSize = 24.sp
+                    fontSize = 24.sp,
+                    modifier = Modifier.clickable{onBack()}
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -60,9 +63,7 @@ fun CollectionActivity(
                     fontWeight = FontWeight.Bold
                 )
             }
-
             Spacer(modifier = Modifier.height(4.dp))
-
             /*
              * Total collection score
              */
