@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -17,6 +20,7 @@ import fr.uge.net.medusa.activities.ProfileScreenActivity
 import fr.uge.net.medusa.activities.RankingActivity
 import fr.uge.net.medusa.activities.RegisterScreenActivity
 import fr.uge.net.medusa.activities.SettingsActivity
+import fr.uge.net.medusa.data.CardsCollection
 import kotlinx.coroutines.delay
 
 /**
@@ -45,6 +49,8 @@ fun MedusaNavHost(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues
 ) {
+    val selectedCollection by remember { mutableStateOf<CardsCollection?>(null) }
+
     NavHost(navController = navController, startDestination = Routes.LOADING) {
         composable(Routes.LOADING) {
             LaunchedEffect(Unit) {
