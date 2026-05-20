@@ -24,29 +24,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/*
-Outer Row
-│
-├── Left Row
-│     ├── Avatar
-│     └── Column
-│           ├── Name
-│           └── Power
-│
-└── Rank Text
-
- */
-
-
 @Composable
-fun PlayerCard(
+fun CollectionItem(
 
-    playerName: String,
-
-    playerPower: Int,
-
-    playerRank: Int
+    collectionName: String,
+    numberOfCards : Int,
+    power: Int,
+    collectionNumber: Int
 ) {
+    val colors = listOf(
+        Color(0xFFFF6B6B),
+        Color(0xFF5DADE2),
+        Color(0xFFF5B041),
+        Color(0xFFF7DC6F)
+    )
 
     Row(
         modifier = Modifier
@@ -68,46 +59,72 @@ fun PlayerCard(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Player avatar
+            // Collection avatar
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray)
-            )
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(colors[collectionNumber % colors.size]),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "$collectionNumber",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             Spacer(modifier = Modifier.width(12.dp))
             /*
              * Player info
              */
             Column {
                 Text(
-                    text = playerName,
+                    text = collectionName,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Power : $playerPower",
+                    text = "Power : $power",
                     style = MaterialTheme
-                            .typography
-                            .bodySmall
+                        .typography
+                        .bodySmall
                 )
             }
         }
         /*
-         * Rank
+         * Number of cards
          */
-        Text(
-            text = "#$playerRank",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
+        Box(
+            modifier = Modifier.clip(RoundedCornerShape(20.dp))
+                .background(
+                    MaterialTheme
+                        .colorScheme
+                        .primaryContainer
+                )
+                .padding(
+                    horizontal = 12.dp,
+                    vertical = 6.dp
+                )
+        ) {
+            Text(
+                text = "$numberOfCards cards",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color =
+                    MaterialTheme
+                        .colorScheme
+                        .onPrimaryContainer
+            )
+        }
     }
 }
+
 @Composable
 @Preview
-fun PlayerCardPreview(){
-    PlayerCard(
-        playerName = "narmin",
-        playerPower = 1000,
-        playerRank = 24
+fun CollectionItemPreview() {
+    CollectionItem(
+        collectionName = "Paris",
+        numberOfCards = 50,
+        power = 100,
+        2
     )
 }
