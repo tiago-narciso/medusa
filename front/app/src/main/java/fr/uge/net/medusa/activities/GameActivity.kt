@@ -198,7 +198,7 @@ private fun GameMapScreen(gameViewModel: GameViewModel) {
             factory = { mapView },
             modifier = Modifier.fillMaxSize(),
             update = { map ->
-                map.overlays.removeIf { it is Marker }
+                // map.overlays.removeIf { it is Marker }
                 gameViewModel.cards.forEach { card ->
                     val marker = Marker(map).apply {
                         position = GeoPoint(card.lat, card.long)

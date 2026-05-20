@@ -1,4 +1,4 @@
-package fr.uge.net.medusa.data
+package fr.uge.net.medusa.models
 
 import java.util.UUID
 

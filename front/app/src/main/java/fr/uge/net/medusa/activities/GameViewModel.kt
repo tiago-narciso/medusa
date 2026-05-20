@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.uge.net.medusa.api.ApiProvider
-import fr.uge.net.medusa.data.NearCard
+import fr.uge.net.medusa.models.NearCard
 import fr.uge.net.medusa.models.NearRequest
 import fr.uge.net.medusa.models.TokenStore
 import fr.uge.net.medusa.services.DeviceLocationService
@@ -138,7 +138,7 @@ class GameViewModel : ViewModel() {
             gameStatus = GameStatus.NotLogged
             return
         }
-        cards = apiService.near(token, nearRequest).cards;
+        cards = apiService.near("Bearer " + token, nearRequest);
     }
 
     override fun onCleared() {

@@ -45,7 +45,7 @@ interface ApiService {
     suspend fun near(
         @Header("Authorization") token: String,
         @Body request: NearRequest
-    ): NearResponse
+    ): List<NearCard>
 
 
 }
