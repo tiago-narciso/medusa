@@ -137,6 +137,7 @@ fun MedusaNavHost(
                         selectedCard = card
                         navController.navigate(Routes.CARD)
                     },
+                    onBack = { navController.popBackStack() }
                 )
             }
         }
