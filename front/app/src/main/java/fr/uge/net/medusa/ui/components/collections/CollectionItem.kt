@@ -1,6 +1,7 @@
 package fr.uge.net.medusa.ui.components.collections
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,14 +24,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.uge.net.medusa.data.CollectionUi
+
+
+/*
+
+Outer Row
+│
+├── Left Row
+│     ├── Collection Avatar
+│     └── Column
+│           ├── Collection Name
+│           └── Power
+│
+└── Right Row
+      ├── Card Count
+      └── Arrow >
+
+ */
 
 @Composable
 fun CollectionItem(
 
-    collectionName: String,
-    numberOfCards : Int,
-    power: Int,
-    collectionNumber: Int
+    index:Int,
+    collection: CollectionUi,
+    onClick: () -> Unit
+
 ) {
     val colors = listOf(
         Color(0xFFFF6B6B),
@@ -50,6 +69,7 @@ fun CollectionItem(
                     .colorScheme
                     .surfaceVariant
             )
+            .clickable { onClick() }
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween, // makes rank be on the left
         verticalAlignment = Alignment.CenterVertically // makes elements inside centered vertically
@@ -64,11 +84,11 @@ fun CollectionItem(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(colors[collectionNumber % colors.size]),
+                    .background(colors[index % colors.size]),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "$collectionNumber",
+                    text = "${index + 1}",
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
@@ -79,11 +99,11 @@ fun CollectionItem(
              */
             Column {
                 Text(
-                    text = collectionName,
+                    text = collection.name,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Power : $power",
+                    text = "Power : ${collection.power}",
                     style = MaterialTheme
                         .typography
                         .bodySmall
@@ -91,28 +111,41 @@ fun CollectionItem(
             }
         }
         /*
-         * Number of cards
+         * Right row
          */
-        Box(
-            modifier = Modifier.clip(RoundedCornerShape(20.dp))
-                .background(
-                    MaterialTheme
-                        .colorScheme
-                        .primaryContainer
-                )
-                .padding(
-                    horizontal = 12.dp,
-                    vertical = 6.dp
-                )
+        Row(
+            verticalAlignment =
+                Alignment.CenterVertically
         ) {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(
+                        MaterialTheme
+                            .colorScheme
+                            .primaryContainer
+                            .copy(alpha = 0.7f)
+                    )
+                    .padding(
+                        horizontal = 10.dp,
+                        vertical = 4.dp
+                    )
+            ) {
+                Text(
+                    text = "${collection.cardCount}",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme
+                            .colorScheme
+                            .onPrimaryContainer
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "$numberOfCards cards",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color =
-                    MaterialTheme
+                text = ">",
+                color = MaterialTheme
                         .colorScheme
-                        .onPrimaryContainer
+                        .onSurfaceVariant
             )
         }
     }
@@ -122,9 +155,8 @@ fun CollectionItem(
 @Preview
 fun CollectionItemPreview() {
     CollectionItem(
-        collectionName = "Paris",
-        numberOfCards = 50,
-        power = 100,
-        2
+        0,
+        CollectionUi("paris", 40, 23),
+        onClick = {}
     )
 }
