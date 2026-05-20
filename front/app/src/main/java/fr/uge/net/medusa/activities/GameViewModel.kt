@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.uge.net.medusa.api.ApiProvider
+import fr.uge.net.medusa.data.NearCard
+import fr.uge.net.medusa.models.NearRequest
 import fr.uge.net.medusa.services.DeviceLocationService
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -23,6 +26,11 @@ class GameViewModel : ViewModel() {
         data object LocationDisabled : GameStatus
         data object NoPosition : GameStatus
     }
+
+    val apiService = ApiProvider.getRealApi();
+
+    var cards by mutableStateOf(listOf<NearCard>())
+        private set
 
     var userPosition by mutableStateOf(DEFAULT_USER_POSITION)
         private set
@@ -114,6 +122,9 @@ class GameViewModel : ViewModel() {
             gameStatus = GameStatus.NoPosition
             return
         }
+
+        val nearRequest = NearRequest(currentPosition.latitude, currentPosition.longitude);
+        cards = apiService.near(nearRequest).cards;
 
         updateUserPosition(currentPosition)
         gameStatus = GameStatus.Ready

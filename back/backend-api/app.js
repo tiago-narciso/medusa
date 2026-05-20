@@ -1,4 +1,5 @@
 const express = require('express');
+const pool = require('./db');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
@@ -48,6 +49,20 @@ app.use((err, req, res, next) => {
   });
 });
 
+
+// DUMMY REQUEST TO TEST DATABASE
+app.get('/places', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM place LIMIT 50');
+    
+    // The data is always inside the 'rows' property
+    res.json(result.rows); 
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // 404 handler uknown route
 app.use((req, res) => {
   res.status(404).json({
@@ -55,6 +70,7 @@ app.use((req, res) => {
     path: req.path
   });
 });
+
 
 // Start server
 app.listen(PORT, () => {

@@ -3,6 +3,8 @@ package fr.uge.net.medusa.api
 import fr.uge.net.medusa.models.CardsResponse
 import fr.uge.net.medusa.models.LoginRequest
 import fr.uge.net.medusa.models.LoginResponse
+import fr.uge.net.medusa.models.NearRequest
+import fr.uge.net.medusa.models.NearResponse
 import fr.uge.net.medusa.models.RegisterRequest
 import fr.uge.net.medusa.models.RegisterResponse
 
@@ -24,8 +26,9 @@ import fr.uge.net.medusa.models.RegisterResponse
 interface IGameApi {
     suspend fun login(request: LoginRequest): LoginResponse // returns the login token
     suspend fun register(request: RegisterRequest): RegisterResponse // returns the login token
-
     suspend fun getCards(): CardsResponse
+
+    suspend fun near(request: NearRequest): NearResponse
 
 
 }

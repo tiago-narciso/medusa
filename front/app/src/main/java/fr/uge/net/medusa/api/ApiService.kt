@@ -40,6 +40,11 @@ interface ApiService {
     suspend fun getCards(
     ): CardsResponse
 
+    @POST("user/near")
+    suspend fun near(
+       @Body request: NearRequest
+    ): NearResponse
+
 
 
 }

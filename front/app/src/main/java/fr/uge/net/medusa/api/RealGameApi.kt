@@ -4,8 +4,7 @@ import fr.uge.net.medusa.models.*
 
 class RealGameApi : IGameApi {
 
-    private val apiService =
-        ApiClient.getApiService()
+    private val apiService = ApiClient.getApiService()
 
     override suspend fun login(
         request: LoginRequest,
@@ -27,5 +26,9 @@ class RealGameApi : IGameApi {
 
     override suspend fun getCards(): CardsResponse {
         return apiService.getCards()
+    }
+
+    override suspend fun near(request: NearRequest): NearResponse {
+        return apiService.near(request);
     }
 }

@@ -29,6 +29,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.uge.net.medusa.R
 import fr.uge.net.medusa.ui.components.GameStatusOverlay
+import fr.uge.net.medusa.api.ApiProvider
+import fr.uge.net.medusa.models.NearRequest
 import fr.uge.net.medusa.ui.components.navigation.BottomNavigationBar
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
@@ -42,7 +44,7 @@ import org.osmdroid.views.overlay.Polygon
 private const val MAP_ZOOM_LEVEL = 18.0
 private const val USER_ZONE_RADIUS_METERS = 150.0
 
-private fun getTileSource(isDark: Boolean) : OnlineTileSourceBase {
+private fun getTileSource(isDark: Boolean): OnlineTileSourceBase {
     if (isDark)
         return XYTileSource(
             "CartoDark",
@@ -123,6 +125,7 @@ fun GameScreen(
 
 @Composable
 private fun GameMapScreen(gameViewModel: GameViewModel) {
+    val apiService = ApiProvider.getRealApi();
     val context = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val isDark = isSystemInDarkTheme()
@@ -193,7 +196,26 @@ private fun GameMapScreen(gameViewModel: GameViewModel) {
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             factory = { mapView },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            update = { map ->
+                map.overlays.removeIf { it is Marker }
+                gameViewModel.cards.forEach { card ->
+                    val marker = Marker(map).apply {
+                        position = GeoPoint(card.lat, card.long)
+                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                        title = "Game Objective"
+
+                        // Handle marker click events
+                        setOnMarkerClickListener { clickedMarker, _ ->
+                            clickedMarker.showInfoWindow()
+                            true // return true to consume the click event
+                        }
+                    }
+                    map.overlays.add(marker)
+                }
+
+                map.invalidate()
+            }
         )
     }
 }

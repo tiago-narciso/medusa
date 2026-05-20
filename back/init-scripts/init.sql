@@ -11,7 +11,7 @@ CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     login VARCHAR(255) UNIQUE NOT NULL,
     hashed_password TEXT NOT NULL,
-    discoverable_until TIMESTAMPTZ
+    discoverable_until TIMESTAMPTZ NOT NULL
 );
 
 -- 2. Personality Table
@@ -38,7 +38,7 @@ CREATE TABLE card (
     power INT,
     position GEOGRAPHY(Point, 4326),
     owner_id UUID REFERENCES users(id) ON DELETE SET NULL,
-    available_at TIMESTAMPTZ
+    available_at TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX idx_card_position ON card USING GIST (position);
 
