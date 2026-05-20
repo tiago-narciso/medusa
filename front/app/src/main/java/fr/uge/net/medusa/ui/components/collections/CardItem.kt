@@ -21,13 +21,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fr.uge.net.medusa.data.cardItem
+import fr.uge.net.medusa.data.Card
 
 @Composable
-fun cardItem(
-    card: cardItem,
+fun CardItem(
+    card: Card,
     fibMultiplier: Int,
-    onClick: (cardItem) -> Unit
+    onClick: (Card) -> Unit
 ){
 
     Row(

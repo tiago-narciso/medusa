@@ -100,7 +100,8 @@ fun MedusaNavHost(
                         restoreState = true
                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                     }
-                }
+                },
+                OnNavigateToCollection= {}
             )
         }
         composable(Routes.RANKING) {

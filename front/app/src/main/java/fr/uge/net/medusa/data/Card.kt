@@ -2,7 +2,7 @@ package fr.uge.net.medusa.data
 
 import java.util.UUID
 
-data class cardItem(
+data class Card(
     val personality:String,
     val wikidataId: UUID,
     val uniqueId: UUID,

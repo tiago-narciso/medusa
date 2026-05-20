@@ -47,7 +47,8 @@ fun fibonacci(num: Int): Int {
 @Composable
 fun ProfileScreenActivity(
     currentRoute: String,
-    onNavigate: (CardsCollection) -> Unit,
+    onNavigate :(String) -> Unit,
+    onNavigateToCollection: (CardsCollection) -> Unit,
     innerPadding: PaddingValues,
 
     ) {
@@ -133,7 +134,7 @@ fun ProfileScreenActivity(
                             index = index,
                             collection = collection,
                             onClick = {
-                                onNavigate(
+                                onNavigateToCollection(
                                     collection
                                 )
                             }
@@ -148,7 +149,7 @@ fun ProfileScreenActivity(
          */
             BottomNavigationBar(
                 currentRoute = currentRoute,
-                onNavigate = { },
+                onNavigate = onNavigate,
                 modifier = Modifier.align(Alignment.BottomCenter),
                 innerPadding
             )

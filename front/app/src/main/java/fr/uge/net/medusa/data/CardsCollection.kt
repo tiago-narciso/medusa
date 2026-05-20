@@ -4,5 +4,5 @@ data class CardsCollection(
     val name: String,
     val cardCount: Int,
     val power: Int,
-    val cards: List<cardItem>
+    val cards: List<Card>
 )
