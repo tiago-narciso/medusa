@@ -2,19 +2,20 @@ package fr.uge.net.medusa.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import fr.uge.net.medusa.activities.CollectionActivity
+import fr.uge.net.medusa.activities.GameLoadingScreen
 import fr.uge.net.medusa.activities.GameScreen
+import fr.uge.net.medusa.activities.GameViewModel
 import fr.uge.net.medusa.activities.LoginScreenActivity
 import fr.uge.net.medusa.activities.ProfileScreenActivity
 import fr.uge.net.medusa.activities.RankingActivity
@@ -22,8 +23,6 @@ import fr.uge.net.medusa.activities.RegisterScreenActivity
 import fr.uge.net.medusa.activities.SettingsActivity
 import fr.uge.net.medusa.data.Card
 import fr.uge.net.medusa.data.CardsCollection
-import kotlinx.coroutines.delay
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 /**
@@ -54,18 +53,19 @@ fun MedusaNavHost(
 ) {
     var selectedCollection by remember { mutableStateOf<CardsCollection?>(null) }
     var selectedCard by remember { mutableStateOf<Card?>(null) }
+    val gameViewModel: GameViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = Routes.LOADING) {
         composable(Routes.LOADING) {
-            LaunchedEffect(Unit) {
-                delay(1000)
-                navController.navigate(Routes.LOGIN) {
-                    popUpTo(Routes.LOADING) { inclusive = true } // remove loading screen from back stack
+            GameLoadingScreen(
+                gameViewModel = gameViewModel,
+                innerPadding = innerPadding,
+                onBootstrapComplete = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.LOADING) { inclusive = true }
+                    }
                 }
-            }
-            // todo: checks token valid, can access location etc ...
-            // todo: component with an effect that checks if the token is valid and retrieve user data before redirecting
-            Text(modifier = modifier.padding(innerPadding), text = "Loading...")
+            )
         }
         composable(Routes.LOGIN) {
             LoginScreenActivity(
@@ -92,6 +92,7 @@ fun MedusaNavHost(
             GameScreen(
                 currentRoute = Routes.MAIN_GAME,
                 innerPadding = innerPadding,
+                gameViewModel = gameViewModel,
                 onNavigate = { route ->
                     navController.navigate(route) {
                         launchSingleTop = true

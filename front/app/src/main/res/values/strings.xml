@@ -11,4 +11,18 @@
     <string name="error_unknown">An unknown error occurred</string>
     <string name="error_invalid_password">The password you chose is too weak to be used</string>
     <string name="error_login_already_taken">The login you chose is already taken</string>
+    <string name="game_loading_startup">Preparing game…</string>
+    <string name="game_status_loading_title">Checking game requirements</string>
+    <string name="game_status_loading_message">We are checking internet and location services.</string>
+    <string name="game_status_no_internet_title">No internet connection</string>
+    <string name="game_status_no_internet_message">Reconnect to internet to continue updating your position.</string>
+    <string name="game_status_permission_title">Location permission required</string>
+    <string name="game_status_permission_message">Grant location permission to update your position on the map.</string>
+    <string name="game_status_location_disabled_title">Location is disabled</string>
+    <string name="game_status_location_disabled_message">Enable location services to keep the map updated.</string>
+    <string name="game_status_no_position_title">Position unavailable</string>
+    <string name="game_status_no_position_message">Unable to get your current position. Try again in a few seconds.</string>
+    <string name="game_status_retry">Retry</string>
+    <string name="game_status_grant_permission">Grant permission</string>
+    <string name="game_status_open_settings">Open location settings</string>
 </resources>
