@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -13,9 +16,11 @@ import androidx.navigation.compose.composable
 import fr.uge.net.medusa.activities.GameScreen
 import fr.uge.net.medusa.activities.LoginScreenActivity
 import fr.uge.net.medusa.activities.ProfileActivity
+import fr.uge.net.medusa.activities.ProfileScreenActivity
 import fr.uge.net.medusa.activities.RankingActivity
 import fr.uge.net.medusa.activities.RegisterScreenActivity
 import fr.uge.net.medusa.activities.SettingsActivity
+import fr.uge.net.medusa.data.CardsCollection
 import kotlinx.coroutines.delay
 
 /**
@@ -44,7 +49,9 @@ fun MedusaNavHost(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues
 ) {
-    NavHost(navController = navController, startDestination = Routes.MAIN_GAME) {
+    val selectedCollection by remember { mutableStateOf<CardsCollection?>(null) }
+
+    NavHost(navController = navController, startDestination = Routes.LOADING) {
         composable(Routes.LOADING) {
             LaunchedEffect(Unit) {
                 delay(1000)
@@ -90,7 +97,7 @@ fun MedusaNavHost(
             )
         }
         composable(Routes.PROFILE) {
-            ProfileActivity(
+            ProfileScreenActivity (
                 currentRoute = Routes.PROFILE,
                 innerPadding = innerPadding,
                 onNavigate = { route ->
@@ -99,7 +106,8 @@ fun MedusaNavHost(
                         restoreState = true
                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                     }
-                }
+                },
+                OnNavigateToCollection= {}
             )
         }
         composable(Routes.RANKING) {

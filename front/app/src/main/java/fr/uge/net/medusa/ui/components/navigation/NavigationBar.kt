@@ -1,4 +1,4 @@
-package fr.uge.net.medusa.ui.components
+package fr.uge.net.medusa.ui.components.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

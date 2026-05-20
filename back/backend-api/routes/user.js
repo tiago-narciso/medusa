@@ -90,4 +90,21 @@ app.post('/register', (req, res) => {
 });
 
 
+
+/**
+ * GET user/cards
+ * return all cards owned by user
+ * @TODO SHOULD authenticate user first?
+ */
+app.get('/cards', (req, res) => {
+  
+  
+
+  
+  res.status(200).json({
+    token: 'fake-token' 
+  });
+});
+
+
 module.exports = app;

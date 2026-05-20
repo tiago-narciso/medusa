@@ -24,4 +24,8 @@ class RealGameApi : IGameApi {
             request
         )
     }
+
+    override suspend fun getCards(): CardsResponse {
+        return apiService.getCards()
+    }
 }
