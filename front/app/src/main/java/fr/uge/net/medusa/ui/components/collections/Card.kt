@@ -18,44 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fr.uge.net.medusa.data.CardsCollection
-
-
-/*
-
-Outer Row
-│
-├── Left Row
-│     ├── Collection Avatar
-│     └── Column
-│           ├── Collection Name
-│           └── Power
-│
-└── Right Row
-      ├── Card Count
-      └── Arrow >
-
- */
+import fr.uge.net.medusa.data.cardItem
 
 @Composable
-fun CollectionItem(
-
-    index:Int,
-    collection: CardsCollection,
-    onClick: () -> Unit
-
-) {
-    val colors = listOf(
-        Color(0xFFFF6B6B),
-        Color(0xFF5DADE2),
-        Color(0xFFF5B041),
-        Color(0xFFF7DC6F)
-    )
+fun cardItem(
+    card: cardItem,
+    fibMultiplier: Int,
+    onClick: (cardItem) -> Unit
+){
 
     Row(
         modifier = Modifier
@@ -68,9 +41,9 @@ fun CollectionItem(
                     .colorScheme
                     .surfaceVariant
             )
-            .clickable { onClick() }
+            .clickable { onClick(card)}
             .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween, // makes rank be on the left
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically // makes elements inside centered vertically
 
     ) {
@@ -78,31 +51,32 @@ fun CollectionItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Collection avatar
+            // Card avatar
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(colors[index % colors.size]),
+                    .clip(RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "${index + 1}",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
             }
             Spacer(modifier = Modifier.width(12.dp))
             /*
-             * Player info
+             * card info
              */
             Column {
                 Text(
-                    text = collection.name,
+                    text = card.personality,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Power : ${collection.power}",
+                    text = "Power : ${card.power}",
+                    style = MaterialTheme
+                        .typography
+                        .bodySmall
+                )
+
+                Text(
+                    text = card.acquisitionDate,
                     style = MaterialTheme
                         .typography
                         .bodySmall
@@ -131,22 +105,22 @@ fun CollectionItem(
                     )
             ) {
                 Text(
-                    text = "${collection.cardCount}",
+                    text = "✖$fibMultiplier",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme
-                            .colorScheme
-                            .onPrimaryContainer
+                        .colorScheme
+                        .onPrimaryContainer
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = ">",
                 color = MaterialTheme
-                        .colorScheme
-                        .onSurfaceVariant
+                    .colorScheme
+                    .onSurfaceVariant
             )
         }
     }
-}
 
+}

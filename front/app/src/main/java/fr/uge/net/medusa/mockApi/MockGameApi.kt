@@ -1,7 +1,7 @@
 package fr.uge.net.medusa.mockApi
 
 import fr.uge.net.medusa.api.IGameApi
-import fr.uge.net.medusa.data.Card
+import fr.uge.net.medusa.data.cardItem
 
 import fr.uge.net.medusa.models.*
 import java.util.UUID
@@ -51,14 +51,14 @@ class MockGameApi: IGameApi {
 
         return CardsResponse(
             cards = listOf(
-                Card(
+                cardItem(
                     wikidataId = UUID.randomUUID(),
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Paris",
                     power = 120,
                     "2025-07-21T14:30:00Z"
                 ),
-                Card(
+                cardItem(
                     wikidataId = UUID.randomUUID(),
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Paris",
@@ -66,7 +66,7 @@ class MockGameApi: IGameApi {
                     "2024-07-21T14:30:00Z"
                 ),
 
-                Card(
+                cardItem(
                     wikidataId = UUID.randomUUID(),
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Tokyo",
@@ -74,7 +74,7 @@ class MockGameApi: IGameApi {
                     "2023-07-21T14:30:00Z"
                 ),
 
-                Card(
+                cardItem(
                     wikidataId = UUID.randomUUID(),
                     uniqueId = UUID.randomUUID(),
                     placeOfBirth = "Rome",

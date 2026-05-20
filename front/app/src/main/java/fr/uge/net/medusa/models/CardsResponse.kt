@@ -1,8 +1,8 @@
 package fr.uge.net.medusa.models
 
-import fr.uge.net.medusa.data.Card
+import fr.uge.net.medusa.data.cardItem
 
 data class CardsResponse(
-   val cards: List<Card>
+   val cards: List<cardItem>
 
 )
